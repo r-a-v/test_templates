@@ -1,0 +1,12 @@
+# Template information section
+name: "RealmRepository"
+summary: "Repository for working with Realm (package SQDataBase is required)"
+author: "Sequenia"
+version: "1.0.0"
+license: "MIT"
+
+# The declarations for code files
+code_files:
+- {custom_name: RealmHelper.swift, name: DB/RealmHelper.swift, path: RealmHelper.swift.liquid}
+- {custom_name: RealmConfiguration.swift, name: DB/RealmConfiguration.swift, path: RealmConfiguration.swift.liquid}
+- {custom_name: RealmRepository.swift, name: DB/RealmRepository.swift, path: RealmRepository.swift.liquid}

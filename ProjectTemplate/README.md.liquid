@@ -1,0 +1,69 @@
+# {{ module_info.name }}
+
+[![Tuist badge](https://img.shields.io/badge/Powered%20by-Tuist-blue)](https://tuist.io)
+[![Fastlane badge](https://img.shields.io/badge/Deploy%20with-Fastlane-blue)](https://fastlane.tools/)
+[![Made by Sequenia](https://img.shields.io/badge/Made%20by-Sequenia-green)](https://sequenia.com/)
+
+## Необходимые зависимости
+
+- `ruby`. Должны быть установлены с помощью [`rbenv`](https://github.com/rbenv/rbenv)
+- `bundler`. Гем для установки зависимостей (`cocoapods`, `fastlane` и т.д.) Установите его с помощью команды `gem install bundler`
+- `mint`. Средство для запуска Swift-овых пакетов. Инструкцию можно найти [здесь](https://github.com/yonaskolb/Mint)
+- `tuist`. Средство по генерации проектов XCode по мета-описанию с помощью swift-файлов. Инструкцию можно найти [здесь](https://docs.tuist.io/tutorial/get-started)
+
+## Старт разработки
+- Склонируйте проект
+- Перейдите в директорию проекта
+- Выполните команду `mint run tuist/tuist-up`
+- Откройте в XCode `{{ module_info.name }}.xcworkspace`
+
+## Общая структура проекта
+Проект использует архитектуру VUPER, где:
+
+- V - View, UI экрана
+- U - UseCase, операция по загрузке/обработке данных
+- P - Presenter, слой, отвечющий за бизнес-логику экрана
+- E - Entity, данные, отображаемые на экране
+- R - Router, навигация экрана
+## Кодогенерация
+В проекте доступна кодогенерация с помощью [Generamba](https://github.com/strongself/Generamba). Для работы доступны следующие шаблоны:
+
+### Module
+Обыкновенный viewController без каких либо особенностей в верстке
+```
+bundle exec generamba gen ScreenName Module
+```
+### TableModule
+Экран с простым списком с табличным лейаутом
+```
+bundle exec generamba gen ScreenName TableModule
+```
+### CollectionModule
+Экран с коллекцией ячеек с произвольным лейаутом
+```
+bundle exec generamba gen ScreenName CollectionModule
+```
+
+### CollectionViewCell
+Ячейка коллекции
+```
+bundle exec generamba gen CellName CollectionViewCell
+```
+
+### CollectionViewView
+ReusableView для коллекции (хэдер или футер секции)
+```
+bundle exec generamba gen ViewName CollectionViewView
+```
+
+### RealmRepository
+Основа для использования базы данных [Realm](https://github.com/realm/realm-swift). Адаптирован к библиотеке [SQDataBase](https://github.com/sequenia/SQDataBase)
+```
+bundle exec generamba gen DB RealmRepository
+```
+
+### RealmEntity
+Сущность, хранимая в БД [Realm](https://github.com/realm/realm-swift). Адаптирован к библиотеке [SQDataBase](https://github.com/sequenia/SQDataBase)
+```
+bundle exec generamba gen EntityName RealmEntity
+```

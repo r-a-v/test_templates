@@ -1,0 +1,40 @@
+//
+//  BarStyle.swift
+//  {{ module_info.name }}
+//
+//  Created by {{ developer.name }} on {{ date }}.
+//  Copyright {{ year }} {{ developer.company }}. All rights reserved.
+//
+
+import UIKit
+import SQExtensions
+
+public enum BarStyle: NavigationBarStyle {
+
+    case white
+
+    public var backgroundImage: UIImage? {
+        switch self {
+        case .white:
+            return UIImage.sq.create(withColor: .white)
+        }
+    }
+
+    public var isTranslucent: Bool {
+        switch self {
+        case .white:
+            return false
+        }
+    }
+
+    public var tintColor: UIColor? {
+        return .black
+    }
+
+    public var titleAttributes: [NSAttributedString.Key: Any] {
+        [
+            .font: UIFont.systemFont(ofSize: 13),
+            .foregroundColor: UIColor.black
+        ]
+    }
+}

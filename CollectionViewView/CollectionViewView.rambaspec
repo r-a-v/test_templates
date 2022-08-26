@@ -1,0 +1,11 @@
+# Template information section
+name: CollectionViewView
+summary: Collection view reusable view
+author: Sequenia
+version: 1.0.0
+license: MIT
+
+# The declarations for code files
+code_files:
+- {name: Model.swift, path: ../CollectionViewCell/Model.swift.liquid}
+- {name: View.swift, path: View.swift.liquid}

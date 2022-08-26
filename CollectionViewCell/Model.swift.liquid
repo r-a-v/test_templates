@@ -1,0 +1,30 @@
+//
+//  {{ module_info.name }}Model.swift
+//  {{ module_info.project_name }}
+//
+//  Created by {{ developer.name }} on {{ date }}.
+//  Copyright {{ year }} {{ developer.company }}. All rights reserved.
+//
+
+import Foundation
+
+struct {{ module_info.name }}Model {
+
+    let id: String
+}
+
+// MARK: - Hashable
+extension {{ module_info.name }}Model: Hashable {
+
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(self.id)
+    }
+}
+
+// MARK: - Equatable
+extension {{ module_info.name }}Model: Equatable {
+
+    public static func == (lhs: {{ module_info.name }}Model, rhs: {{ module_info.name }}Model) -> Bool {
+        lhs.id == rhs.id
+    }
+}

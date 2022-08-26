@@ -1,0 +1,32 @@
+//
+//  UIViewPreview.swift
+//  {{ module_info.name }}
+//
+//  Created by {{ developer.name }} on {{ date }}.
+//  Copyright {{ year }} {{ developer.company }}. All rights reserved.
+//
+
+#if DEBUG && canImport(SwiftUI)
+import UIKit
+import SwiftUI
+
+@available(iOS 13.0, *)
+struct UIViewPreview<View: UIView>: UIViewRepresentable {
+
+    let view: View
+
+    init(_ builder: @escaping () -> View) {
+        self.view = builder()
+    }
+
+    // MARK: - UIViewRepresentable
+    func makeUIView(context: Context) -> UIView {
+        self.view.setContentHuggingPriority(.defaultHigh, for: .horizontal)
+        self.view.setContentHuggingPriority(.defaultHigh, for: .vertical)
+        return view
+    }
+
+    func updateUIView(_ view: UIView, context: Context) { }
+
+}
+#endif

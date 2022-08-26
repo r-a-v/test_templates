@@ -1,0 +1,24 @@
+# Template information section
+name: "TableModule"
+summary: "Basic table module for application"
+author: "Sequenia"
+version: "1.0.0"
+
+# The declarations for code files
+
+code_files:
+# View layer
+- {name: View/ViewController.swift, path: View/ViewController.swift.liquid}
+- {name: View/Factory.swift, path: View/Factory.swift.liquid}
+- {name: View/Section.swift, path: View/Section.swift.liquid}
+
+# Presenter layer
+- {name: Presenter/Presenter.swift, path: ../Module/Presenter/Presenter.swift.liquid}
+- {name: Presenter/Data.swift, path: ../Module/Presenter/Data.swift.liquid}
+- {name: Presenter/UseCases.swift, path: ../Module/Presenter/UseCases.swift.liquid}
+
+# Router layer
+- {name: Router/Router.swift, path: ../Module/Router/Router.swift.liquid}
+
+# Builder
+- {name: Builder.swift, path: ../Module/Builder.swift.liquid}

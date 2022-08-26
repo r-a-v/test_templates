@@ -1,0 +1,78 @@
+---
+figma:
+  lightFileId: # Fill that
+  # darkFileId: # Fill that if you will use dark theme
+
+# [optional] Common export parameters
+common:
+  colors:
+    # RegExp pattern for color name validation before exporting 
+    nameValidateRegexp: '^[a-zA-Z0-9 ]+$' # RegExp pattern for: background, background_primary, widget_primary_background
+  icons:
+    # RegExp pattern for icon name validation before exporting 
+    nameValidateRegexp: '^(ic) ([a-z0-9 ]+)$' # RegExp pattern for: ic_24_icon_name, ic_24_icon
+  images:
+    # RegExp pattern for image name validation before exporting
+    nameValidateRegexp: '^(img) ([a-zA-Z0-9 ]+)$' # RegExp pattern for: img_image_name
+
+# [optional] iOS export parameters
+ios:
+  # Path to xcodeproj
+  xcodeprojPath: "./Project/{{ module_info.name }}.xcodeproj"
+  # Project's main group
+  xcodeprojMainGroupName: "Project"
+  # Xcode Target containing resources and corresponding swift code
+  target: "{{ module_info.name }}"
+  # Path to the Assets.xcassets directory
+  xcassetsPathColors: "./Project/Resources/Assets/Colors.xcassets"
+  # Is Assets.xcassets located in the main bundle?
+  xcassetsPathImages: "./Project/Resources/Assets/Assets.xcassets"
+
+  xcassetsInMainBundle: true
+  
+  # Parameters for exporting colors
+  colors:
+    # Should be generate color assets instead of pure swift code
+    useColorAssets: True
+    # Name of the folder inside Assets.xcassets where to place colors (.colorset directories)
+    assetsFolder: Colors
+    # Color name style: camelCase or snake_case
+    nameStyle: camelCase
+
+  # Parameters for exporting icons
+  icons:
+    # Image file format: pdf or svg
+    format: pdf
+    # Name of the folder inside Assets.xcassets where to place icons (.imageset directories)
+    assetsFolder: Icons
+    # Icon name style: camelCase or snake_case
+    nameStyle: camelCase
+    # Preserve vector representation by default
+    preservesVectorRepresentation: false
+    # Icons, preserves vector representation
+    # preservesVectorRepresentationIcons:
+    #  - icVectorIcons
+    # Icon default rendering intent
+    renderIntent: original
+    # List of icons, rendered as original
+    renderAsOriginalIcons: []
+    # List of icons, rendered as template
+    # renderAsTemplateIcons: 
+    #  - icFirstTemplateIcon
+    #  - icSecondTemplateIcon
+
+  # Parameters for exporting images
+  images:
+    # Name of the folder inside Assets.xcassets where to place images (.imageset directories)
+    assetsFolder: Illustrations
+    # Image name style: camelCase or snake_case
+    nameStyle: camelCase
+
+  # Parameters for exporting typography
+  typography:
+    # Path to directory where to style files
+    stylesDirectory: "./Project/Sources/CustomUI/UIKit/Styles"
+    # Will FigmaExport generate UILabel for each text style (font) e.g. HeaderLabel, BodyLabel, CaptionLabel.
+    generateComponents: true
+    # Path to directory where to place components files: labels, buttons, etc. (Requred if generateComponents = true)
+    componentsDirectory: "./Project/Sources/CustomUI/UIKit/Components"

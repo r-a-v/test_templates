@@ -1,0 +1,47 @@
+//
+//  {{ module_info.name }}Factory.swift
+//  {{ module_info.project_name }}
+//
+//  Created by {{ developer.name }} on {{ date }}.
+//  Copyright {{ year }} {{ developer.company }}. All rights reserved.
+//
+
+import UIKit
+import SQExtensions
+import SQCompositionLists
+
+final class {{ module_info.name }}Factory {
+
+    weak var collectionView: UICollectionView?
+    weak var parent: AnyObject?
+
+    required init(collectionView: UICollectionView) {
+        self.collectionView = collectionView
+
+        self.registerElements()
+    }
+
+    required init(collectionView: UICollectionView, parent: AnyObject?) {
+        self.collectionView = collectionView
+        self.parent = parent
+
+        self.registerElements()
+    }
+
+}
+
+// MARK: - SQListFactory
+extension {{ module_info.name }}Factory: SQListFactory {
+
+    func registerElements() {
+    }
+
+    func cell(forItemModel itemModel: AnyHashable, atIndexPath indexPath: IndexPath) -> UICollectionViewCell? {
+        guard let collectionView = collectionView else { return nil }
+
+        switch itemModel {
+        default:
+            return nil
+        }
+    }
+}

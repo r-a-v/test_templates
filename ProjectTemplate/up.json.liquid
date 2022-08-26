@@ -1,0 +1,102 @@
+[
+  {
+    "name": "Bundler install",
+    "meet": [
+      "gem",
+      "install",
+      "bundler"
+    ],
+    "is_met": [
+      "diff"
+    ]
+  },
+  {
+    "name": "Bundle install",
+    "meet": [
+      "bundle",
+      "install"
+    ],
+    "is_met": [
+      "diff"
+    ]
+  },
+  {
+    "name": "Install mint packages",
+    "meet": [
+      "mint",
+      "bootstrap"
+    ],
+    "is_met": [
+      "diff"
+    ]
+  },
+  {
+    "name": "Setup templates",
+    "meet": [
+      "bundle",
+      "exec",
+      "generamba",
+      "template",
+      "install"
+    ],
+    "is_met": [
+      "diff"
+    ]
+  },
+  {
+    "name": "R.swift prepare",
+    "meet": [
+      "touch",
+      "./Project/Sources/R.generated.swift"
+    ],
+    "is_met": [
+      "diff"
+    ]
+  },
+  {
+    "name": "Clear dependencies",
+    "meet": [
+      "tuist",
+      "clean",
+      "dependencies"
+    ],
+    "is_met": [
+      "diff"
+    ]
+  },
+  {
+    "name": "Fetch dependencies",
+    "meet": [
+      "tuist",
+      "fetch",
+      "--update"
+    ],
+    "is_met": [
+      "diff"
+    ]
+  },
+  {
+    "name": "Generate the project",
+    "meet": [
+      "tuist",
+      "generate",
+      "--no-open"
+    ],
+    "is_met": [
+      "diff"
+    ]
+  },
+  {
+    "name": "Install pods",
+    "meet": [
+      "bundle",
+      "exec",
+      "pod",
+      "install",
+      "--repo-update"
+    ],
+    "is_met": [
+      "diff"
+    ]
+  }
+]

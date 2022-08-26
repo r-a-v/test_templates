@@ -1,0 +1,113 @@
+//
+//  {{ module_info.name }}View.swift
+//  {{ module_info.project_name }}
+//
+//  Created by {{ developer.name }} on {{ date }}.
+//  Copyright {{ year }} {{ developer.company }}. All rights reserved.
+//
+
+import UIKit
+import SQCompositionLists
+import SQExtensions
+import SQUIKit
+import SnapKit
+
+protocol {{ module_info.name }}View: BaseView {
+
+    @MainActor
+    func show(data: {{ module_info.name }}Data)
+
+    @MainActor
+    func show(data: {{ module_info.name }}Data, animated: Bool)
+}
+
+final class {{ module_info.name }}ViewController: BaseListViewController {
+
+// MARK: - VUPER
+    private var presenter: {{ module_info.name }}Presenter! { self._internalPresenter as? {{ module_info.name }}Presenter }
+
+// MARK: - Layout
+    private lazy var layoutManager = {{ module_info.name }}LayoutManager(delegate: self)
+
+// MARK: - Life cycle
+    override func loadView() {
+        super.loadView()
+
+        self.configure()
+        self.setupLayout()
+    }
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+
+        self.presenter.viewDidLoad()
+    }
+
+// MARK: - Configure collection
+    override func createCollectionViewLayout() -> UICollectionViewLayout {
+        self.layoutManager.createLayout()
+    }
+
+    override func setupCollectionView() {
+
+    }
+
+    override func setupFabric() {
+        self.factory = {{ module_info.name }}Factory(collectionView: self.collectionView, parent: self)
+    }
+}
+
+// MARK: - SQConfigurableView
+extension {{ module_info.name }}ViewController: SQConfigurableView {
+
+    func configure() {
+
+    }
+
+    func setupLayout() {
+        self.view.addSubview(self.collectionView)
+
+        self.collectionView.snp.makeConstraints {
+            $0.top.equalToSuperview()
+            $0.bottom.equalToSuperview()
+            $0.left.equalToSuperview()
+            $0.right.equalToSuperview()
+        }
+    }
+}
+
+// MARK: - {{ module_info.name }}LayoutManagerDelegate
+extension {{ module_info.name }}ViewController: {{ module_info.name }}LayoutManagerDelegate {
+
+    func sectionType(forSection section: Int) -> {{ module_info.name }}Section? {
+        self.sections[safe: section]?.content as? {{ module_info.name }}Section
+    }
+}
+
+// MARK: - {{ module_info.name }}View
+extension {{ module_info.name }}ViewController: {{ module_info.name }}View {
+
+    func show(data: {{ module_info.name }}Data) {
+        self.show(data: data, animated: true)
+    }
+
+    func show(data: {{ module_info.name }}Data, animated: Bool) {
+        let sectionsContent: [SQSectionContent] = [
+        ]
+
+        self.reloadData(
+            withSectionsContent: sectionsContent,
+            animated: animated
+        )
+    }
+}
+
+// MARK: - DI
+extension {{ module_info.name }}ViewController {
+    
+    var injectPresenter: {{ module_info.name }}Presenter? {
+        get { nil }
+        set { self._internalPresenter = newValue }
+    }
+}
+

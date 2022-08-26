@@ -1,0 +1,47 @@
+//
+//  {{ module_info.name }}Presenter.swift
+//  {{ module_info.project_name }}
+//
+//  Created by {{ developer.name }} on {{ date }}.
+//  Copyright {{ year }} {{ developer.company }}. All rights reserved.
+//
+
+import Foundation
+import SQExtensions
+
+protocol {{ module_info.name }}Presenter: BasePresenter {
+
+    init(view: {{ module_info.name }}View, router: {{ module_info.name }}Router, useCases: {{ module_info.name }}UseCases)
+}
+
+final class {{ module_info.name }}PresenterImpl: BasePresenterImpl {
+
+// MARK: - VUPER
+    private var view: {{ module_info.name }}View? { self._internalView as? {{ module_info.name }}View }
+    private var router: {{ module_info.name }}Router? { self._internalRouter as? {{ module_info.name }}Router }
+
+    private var useCases: {{ module_info.name }}UseCases!
+
+    private var data = {{ module_info.name }}Data()
+
+// MARK: - Init
+    required init(view: {{ module_info.name }}View, router: {{ module_info.name }}Router, useCases: {{ module_info.name }}UseCases) {
+        super.init()
+
+        self._internalView = view
+        self._internalRouter = router
+        self.useCases = useCases
+    }
+
+// MARK: - Life cycle
+    override func viewDidLoad() {
+        super.viewDidLoad()
+
+        self.view?.show(data: self.data)
+    }
+}
+
+// MARK: - {{ module_info.name }}Presenter
+extension {{ module_info.name }}PresenterImpl: {{ module_info.name }}Presenter {
+
+}

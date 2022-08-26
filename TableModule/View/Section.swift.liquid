@@ -1,0 +1,34 @@
+//
+//  {{ module_info.name }}Section.swift
+//  {{ module_info.project_name }}
+//
+//  Created by {{ developer.name }} on {{ date }}.
+//  Copyright {{ year }} {{ developer.company }}. All rights reserved.
+//
+
+import Foundation
+import SQCompositionLists
+
+enum {{ module_info.name }}SectionType: String {
+
+    case section
+}
+
+struct {{ module_info.name }}Section: SQSectionContent {
+
+    let type: MainSectionType
+
+    var id: String {
+        self.type.rawValue
+    }
+    var items: [AnyHashable]
+
+    var header: AnyHashable? { nil }
+
+    var footer: AnyHashable? { nil }
+
+    init(type: MainSectionType, items: [AnyHashable]) {
+        self.type = type
+        self.items = items
+    }
+}

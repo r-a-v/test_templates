@@ -1,0 +1,206 @@
+# Available jobs definitions
+stages:
+  - beta
+  - release
+  - notify_failure
+
+# Shared settings for all lanes
+.settings:
+  image: ubuntu:18.04
+  tags:
+    - ios
+
+#  SSH Preparations
+.prepare_ssh:
+  script: &prepare_ssh
+    - 'command -v ssh-agent >/dev/null || ( apt-get update -y && apt-get install openssh-client -y )'
+    - eval $(ssh-agent -s)
+    - echo "$GIT_LAB_SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+    - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
+
+# Define commands and constants
+.define_constants:
+  script: &define_constants
+    - export SSH_CONNECT="ssh $BUILD_MACHINE_SSH_USER@$BUILD_MACHINE_ADDRESS -p $BUILD_MACHINE_SSH_PORT"
+    - export PROJECT_FOLDER=$BUILD_MACHINE_WORKSPACE/$CI_PROJECT_NAME
+    - export GIT_REPO_PATH=git@$GITLAB_HOST:$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME.git
+
+# Prepare workspace
+.prepare_folders:
+  script: &prepare_folders
+    - $SSH_CONNECT "mkdir -p $BUILD_MACHINE_WORKSPACE"
+
+# Repo initialization
+.init_repo:
+  script: &init_repo
+    - |
+      $SSH_CONNECT \
+      " \
+      source ~/.zshrc && \
+      [ ! -d $PROJECT_FOLDER ] && git clone $GIT_REPO_PATH $PROJECT_FOLDER || echo \"Already cloned\" && \
+      exit && \
+      "
+
+# Update repo
+.update_repo:
+  script: &update_repo
+    - |
+      $SSH_CONNECT \
+      " \
+      source ~/.zshrc && \
+      cd $PROJECT_FOLDER && \
+      git reset --hard && \
+      git fetch --prune && \
+      git checkout $CI_BUILD_REF_NAME && \
+      git pull origin $CI_BUILD_REF_NAME && \
+      bundle install && \
+      bundle exec fastlane run clear_derived_data && \
+      exit && \
+      "
+
+# Environment preparations
+.init_environment:
+  script: &init_environment
+    - touch .env
+    # Bundle identifier
+    - echo BUNDLE_IDENTIFIER="$BUNDLE_IDENTIFIER" >> .env
+    # App Store Connect API variables
+    - echo APP_STORE_CONNECT_API_KEY_KEY_ID="$APP_STORE_AUTH_KEY_ID" >> .env
+    - echo APP_STORE_CONNECT_API_KEY_ISSUER_ID="$APP_STORE_AUTH_KEY_ISSUER" >> .env
+    - echo APP_STORE_CONNECT_API_KEY_KEY="$APP_STORE_AUTH_KEY_CONTENT" >> .env
+    # Keychain access variables
+    - echo KEYCHAIN_NAME="$BUILD_MACHINE_KEYCHAIN_NAME" >> .env
+    - echo KEYCHAIN_PASSWORD="$BUILD_MACHINE_KEYCHAIN_PASSWORD" >> .env
+    - echo FL_UNLOCK_KEYCHAIN_PATH="$BUILD_MACHINE_KEYCHAIN_NAME" >> .env
+    - echo FL_UNLOCK_KEYCHAIN_PASSWORD="$BUILD_MACHINE_KEYCHAIN_PASSWORD" >> .env
+    # Fastlane's match variables
+    - echo MATCH_GIT_URL="$CERTIFICATES_GIT_REPO" >> .env
+    - echo MATCH_KEYCHAIN_NAME="$BUILD_MACHINE_KEYCHAIN_NAME" >> .env
+    - echo MATCH_PASSWORD="$CERTIFICATES_PASSWORD" >> .env
+    - echo MATCH_KEYCHAIN_PASSWORD="$BUILD_MACHINE_KEYCHAIN_PASSWORD" >> .env
+    # Path to XCode
+    - echo DEVELOPER_DIR="$DEVELOPER_DIR" >> .env
+    # Testflight variables
+    - echo TESTFLIGHT_INSTALLATION_LINK="$TESTFLIGHT_INSTALLATION_LINK" >> .env
+    - echo PILOT_GROUPS="$TESTFLIGHT_GROUPS" >> .env
+    # App Store Connect variables
+    - echo APP_STORE_CONNECT_LINK="$APP_STORE_CONNECT_LINK" >> .env
+    # Slack variables
+    - echo SLACK_CHANNELS=\"$SLACK_CHANNELS\" >> .env
+    - echo SLACK_URL="$SLACK_WEBHOOK_URL" >> .env
+    # Telegram variables
+    - echo TELEGRAM_TOKEN="$TELEGRAM_ACCESS_TOKEN" >> .env
+    - echo TELEGRAM_CHATS_IDS="$TELEGRAM_CHATS_IDS" >> .env
+    # CI variables
+    - echo CI_PIPELINE_SOURCE="$CI_PIPELINE_SOURCE" >> .env
+    - echo CI_PIPELINE_URL="$CI_PIPELINE_URL" >> .env
+    # Youtrack variables
+    - echo YOUTRACK_BASE_URL="$YOUTRACK_BASE_URL" >> .env
+    - echo YOUTRACK_API_TOKEN="$YOUTRACK_API_TOKEN" >> .env
+    - echo YOUTRACK_TASKS_PREFIX="$YOUTRACK_TASKS_PREFIX" >> .env
+    # Upload env file
+    - scp -P $BUILD_MACHINE_SSH_PORT .env $BUILD_MACHINE_SSH_USER@$BUILD_MACHINE_ADDRESS:$PROJECT_FOLDER
+    # Remove env file
+    - rm .env
+
+# Beta version deploy
+beta_deploy:
+  stage: beta
+  extends:
+    - .settings
+  only:
+    - schedules
+    - web
+  timeout: 3 hours
+  environment: Beta
+  before_script:
+    - *prepare_ssh
+    - *define_constants
+    - *prepare_folders
+    - *init_repo
+    - *update_repo
+    - *init_environment
+  script: |
+    $SSH_CONNECT \
+    " \
+    source ~/.zshrc && \
+    cd $PROJECT_FOLDER && \
+    mint run tuist/tuist-up  && \
+    bundle exec fastlane beta && \
+    exit && \
+    "
+
+# RC version deploy
+rc_deploy:
+  stage: beta
+  extends:
+    - .settings
+  only:
+    - schedules
+    - web
+  when: manual
+  timeout: 3 hours
+  environment: RC
+  before_script:
+    - *prepare_ssh
+    - *define_constants
+    - *prepare_folders
+    - *init_repo
+    - *update_repo
+    - *init_environment
+  script: |
+    $SSH_CONNECT \
+    " \
+    source ~/.zshrc && \
+    cd $PROJECT_FOLDER && \
+    mint run tuist/tuist-up  && \
+    bundle exec fastlane rc && \
+    exit && \
+    "
+
+
+# Release version deploy
+release_deploy:
+  stage: release
+  extends:
+    - .settings
+  only:
+    - master
+  timeout: 3 hours
+  environment: Release
+  before_script:
+    - *prepare_ssh
+    - *define_constants
+    - *prepare_folders
+    - *init_repo
+    - *update_repo
+    - *init_environment
+  script: |
+    $SSH_CONNECT \
+    " \
+    source ~/.zshrc && \
+    cd $PROJECT_FOLDER && \
+    mint run tuist/tuist-up  && \
+    bundle exec fastlane release submit_review:true && \
+    exit && \
+    "
+
+# Failure notification
+notify_failure:
+  stage: notify_failure
+  extends:
+    - .settings
+  before_script:
+    - *prepare_ssh
+    - *define_constants
+  script: |
+    $SSH_CONNECT \
+    " \
+    source ~/.zshrc && \
+    cd $PROJECT_FOLDER && \
+    bundle exec fastlane notify_error && \
+    exit && \
+    "
+  when: on_failure

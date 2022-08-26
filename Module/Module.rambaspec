@@ -1,0 +1,22 @@
+# Template information section
+name: "Module"
+summary: "Sequenia"
+author: "Semen Kologrivov"
+version: "1.0.0"
+
+# The declarations for code files
+
+code_files:
+# View layer
+- {name: View/ViewController.swift, path: View/ViewController.swift.liquid}
+
+# Presenter layer
+- {name: Presenter/Presenter.swift, path: Presenter/Presenter.swift.liquid}
+- {name: Presenter/Data.swift, path: Presenter/Data.swift.liquid}
+- {name: Presenter/UseCases.swift, path: Presenter/UseCases.swift.liquid}
+
+# Router layer
+- {name: Router/Router.swift, path: Router/Router.swift.liquid}
+
+# Builder
+- {name: Builder.swift, path: Builder.swift.liquid}

@@ -1,0 +1,32 @@
+//
+//  {{ module_info.name }}RealmEntity.swift
+//  {{ module_info.project_name }}
+//
+//  Created by {{ developer.name }} on {{ date }}.
+//  Copyright {{ year }} {{ developer.company }}. All rights reserved.
+//
+
+import Foundation
+import RealmSwift
+
+import SQDBProtocols
+import SQRealm
+
+final class {{ module_info.name }}RealmEntity: Object, RealmEntity, {{ module_info.name }}Fields {
+
+    typealias EntityType = {{ module_info.name }}
+
+    var entity: {{ module_info.name }} {
+        return {{ module_info.name }}(fromDBEntity: self)
+    }
+
+    @Persisted(primaryKey: true) var id: String = UUID().uuidString
+
+    override init() { }
+
+    required init(fromEntity entity: {{ module_info.name }}) {
+        super.init()
+
+        self.id = entity.id
+    }
+}

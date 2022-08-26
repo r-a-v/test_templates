@@ -1,0 +1,29 @@
+//
+//  {{ module_info.name }}.swift
+//  {{ module_info.project_name }}
+//
+//  Created by {{ developer.name }} on {{ date }}.
+//  Copyright {{ year }} {{ developer.company }}. All rights reserved.
+//
+
+import Foundation
+import SQDBProtocols
+
+protocol {{ module_info.name }}Fields: AnyObject {
+
+}
+
+final class {{ module_info.name }}: Entity, {{ module_info.name }}Fields {
+
+    typealias DBEntityType = {{ module_info.name }}RealmEntity
+
+    var dbEntity: {{ module_info.name }}RealmEntity {
+        return {{ module_info.name }}RealmEntity(fromEntity: self)
+    }
+
+    var id: String
+
+    required init(fromDBEntity dbEntity: {{ module_info.name }}RealmEntity) {
+        self.id = dbEntity.id
+    }
+}

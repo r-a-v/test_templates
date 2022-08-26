@@ -1,0 +1,88 @@
+//
+//  {{ module_info.name }}LayoutManager.swift
+//  {{ module_info.project_name }}
+//
+//  Created by {{ developer.name }} on {{ date }}.
+//  Copyright {{ year }} {{ developer.company }}. All rights reserved.
+//
+
+import UIKit
+import SQExtensions
+
+protocol {{ module_info.name }}LayoutManagerDelegate: AnyObject {
+
+    func sectionType(forSection section: Int) -> {{ module_info.name }}Section?
+}
+
+final class {{ module_info.name }}LayoutManager {
+
+    private weak var delegate: {{ module_info.name }}LayoutManagerDelegate!
+
+    private lazy var plain: NSCollectionLayoutGroup = {
+        let size = NSCollectionLayoutSize(
+            widthDimension: .fractionalWidth(1),
+            heightDimension: .estimated(44)
+        )
+        let item = NSCollectionLayoutItem(
+            layoutSize: size
+        )
+
+        let group = NSCollectionLayoutGroup.horizontal(
+            layoutSize: size,
+            subitem: item,
+            count: 1
+        )
+
+        return group
+    }()
+
+    init(delegate: {{ module_info.name }}LayoutManagerDelegate) {
+        self.delegate = delegate
+    }
+
+    func createLayout() -> UICollectionViewLayout {
+        let layoutConfig = UICollectionViewCompositionalLayoutConfiguration()
+
+        return UICollectionViewCompositionalLayout(
+            sectionProvider: { index, _ in
+                let section = self.delegate.sectionType(forSection: index)
+
+                let sectionLayout = NSCollectionLayoutSection(group: self.layoutGroup(forSection: section))
+                if section?.header != nil {
+                    let header = NSCollectionLayoutBoundarySupplementaryItem(
+                        layoutSize: .init(
+                            widthDimension: .fractionalWidth(1),
+                            heightDimension: .estimated(44)
+                        ),
+                        elementKind: .collectionSectionHeader,
+                        alignment: .top
+                    )
+                    sectionLayout.boundarySupplementaryItems.append(header)
+                }
+                if section?.footer != nil {
+                    let footer = NSCollectionLayoutBoundarySupplementaryItem(
+                        layoutSize: .init(
+                            widthDimension: .fractionalWidth(1),
+                            heightDimension: .estimated(44)
+                        ),
+                        elementKind: .collectionSectionFooter,
+                        alignment: .bottom
+                    )
+                    sectionLayout.boundarySupplementaryItems.append(footer)
+                }
+                return sectionLayout
+            },
+            configuration: layoutConfig
+        )
+    }
+
+    private func layoutGroup(forSection section: {{ module_info.name }}Section?) -> NSCollectionLayoutGroup {
+        switch section?.type {
+        case .section:
+            return self.plain
+
+        case .none:
+            return self.plain
+        }
+    }
+}

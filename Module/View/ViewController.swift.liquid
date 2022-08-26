@@ -1,0 +1,71 @@
+//
+//  {{ module_info.name }}View.swift
+//  {{ module_info.project_name }}
+//
+//  Created by {{ developer.name }} on {{ date }}.
+//  Copyright {{ year }} {{ developer.company }}. All rights reserved.
+//
+
+import UIKit
+import SQExtensions
+import SQUIKit
+import SnapKit
+
+protocol {{ module_info.name }}View: BaseView {
+
+    @discardableResult
+    func setup(withPresenter presenter: {{ module_info.name }}Presenter) -> Self
+
+    @MainActor
+    func show(data: {{ module_info.name }}Data)
+
+    @MainActor
+    func show(data: {{ module_info.name }}Data, animated: Bool)
+}
+
+final class {{ module_info.name }}ViewController: BaseViewController {
+
+// MARK: - VUPER
+    private var presenter: {{ module_info.name }}Presenter? { self._internalPresenter as? {{ module_info.name }}Presenter }
+
+// MARK: - Life cycle
+    override func loadView() {
+        super.loadView()
+
+        self.configure()
+        self.setupLayout()
+    }
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+
+        self.presenter?.viewDidLoad()
+    }
+}
+
+// MARK: - SQConfigurableView
+extension {{ module_info.name }}ViewController: SQConfigurableView {
+
+    func configure() {
+    }
+
+    func setupLayout() {
+    }
+}
+
+// MARK: - {{ module_info.name }}View
+extension {{ module_info.name }}ViewController: {{ module_info.name }}View {
+
+    func setup(withPresenter presenter: {{ module_info.name }}Presenter) -> Self {
+        self._internalPresenter = presenter
+
+        return self
+    }
+
+    func show(data: {{ module_info.name }}Data) {
+        self.show(data: data, animated: true)
+    }
+
+    func show(data: {{ module_info.name }}Data, animated: Bool) {
+    }
+}

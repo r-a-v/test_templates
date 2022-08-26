@@ -1,0 +1,32 @@
+### Headers settings
+company: {{ custom_parameters.company_name  }}
+
+### Xcode project settings
+project_name: {{ module_info.name }}
+xcodeproj_path: Project/{{ module_info.name }}.xcodeproj/
+
+### Code generation settings section
+# The main project target name
+project_target: {{ module_info.name }}
+
+### Dependencies settings section
+podfile_path: Podfile
+
+# The file path for new modules
+project_file_path: Project/Sources/Modules
+
+catalogs:
+- 'https://gitlab.sequenia.com/ios-development/templates.git'
+
+### Templates
+templates:
+# App screens
+- {name: DIModule}
+- {name: DITableModule}
+- {name: DICollectionModule}
+# Collection views
+- {name: CollectionViewCell}
+- {name: CollectionViewView}
+# Realm DB
+- {name: RealmRepository}
+- {name: RealmEntity}

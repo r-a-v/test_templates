@@ -1,0 +1,190 @@
+import ProjectDescription
+import TuistUtils
+import Foundation
+
+let appVersion = "1.0.0"
+let region = "ru"
+
+let baseSettings = SettingsDictionary()
+    .debugInformationFormat(.dwarfWithDsymDebugInformationFormat)
+    .codeSignIdentity("iPhone Developer")
+    .automaticCodeSigning(devTeam: "$(APP_DEVELOPMENT_TEAM)")
+    .versionNumber(appVersion)
+    .buildNumber(1)
+    .appleGenericVersioningSystem()
+    .developmentLanguage("{{ custom_parameters.lang_code }}")
+    .appIconName("$(APP_ICON_NAME)")
+    .otherLinkerFlags(["-ObjC"])
+
+let configurations: [ProjectDescription.Configuration] = [
+    .debug(
+        name: .debug,
+        xcconfig: "./Configs/Debug/Config-debug.xcconfig"
+    ),
+    .release(
+        name: .beta,
+        xcconfig: "./Configs/Beta/Config-beta.xcconfig"
+    ),
+    .release(
+        name: .rc,
+        xcconfig: "./Configs/RC/Config-rc.xcconfig"
+    ),
+    .release(
+        name: .release,
+        xcconfig: "./Configs/Release/Config-release.xcconfig"
+    )
+]
+
+let settings: ProjectDescription.Settings = .settings(
+    base: baseSettings,
+    configurations: configurations
+)
+
+let launchArgs = [
+    LaunchArgument(
+        name: "-FIRDebugEnabled",
+        isEnabled: false
+    ),
+    LaunchArgument(
+        name: "-FIRDebugDisabled",
+        isEnabled: true
+    )
+]
+
+let arguments = Arguments(
+    environment: [ : ],
+    launchArguments: launchArgs
+)
+
+let project = Project(
+    name: "{{ module_info.name }}",
+    organizationName: "{{ custom_parameters.company_name  }}",
+    options: .options(
+        automaticSchemesOptions: .disabled,
+        developmentRegion: region,
+        disableBundleAccessors: true,
+        disableShowEnvironmentVarsInScriptPhases: false,
+        disableSynthesizedResourceAccessors: true,
+        textSettings: .textSettings(
+            usesTabs: false,
+            indentWidth: 4,
+            tabWidth: 4,
+            wrapsLines: false
+        ),
+        xcodeProjectName: "{{ module_info.name }}"
+    ),
+    settings: settings,
+    targets: [
+       Target(
+          name: "{{ module_info.name }}",
+          platform: .iOS,
+          product: .app,
+          productName: "{{ module_info.name }}",
+          bundleId: "$(APP_BUNDLE_ID)",
+          deploymentTarget: DeploymentTarget.iOS(
+             targetVersion: "{{ custom_parameters.min_platform_version }}",
+             devices: .iphone
+          ),
+          infoPlist: "./Configs/Info.plist",
+          sources: [
+            "./Sources/**"
+          ],
+          resources: [
+            "./Resources/**",
+            "./Sources/**/*.storyboard",
+            "./Sources/**/*.xib"
+          ],
+          headers: .headers(),
+          entitlements: "./Configs/Project.entitlements",
+          scripts: [
+            // Uncomment lines if you will use some Firebase services
+            // .pre(
+            //    path:"./RunScripts/link_firebase_configs.sh",
+            //    name: "Link Firebase configs",
+            //    basedOnDependencyAnalysis: false
+            // ),
+            .pre(
+               path: "./RunScripts/r_swift.sh",
+               name: "R.swift",
+               outputPaths: [
+                  "$SRCROOT/Sources/R.generated.swift"
+               ],
+               basedOnDependencyAnalysis: false
+            ),
+            // Uncomment lines if you will use Firebase Crashlytics
+            // .post(
+            //    path: "./RunScripts/crashlytics.sh",
+            //    name: "Crashlytics",
+            //    inputPaths: [
+            //       "$(SRCROOT)/$(BUILT_PRODUCTS_DIR)/$(INFOPLIST_PATH)",
+            //       "${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}/Contents/Resources/DWARF/${TARGET_NAME}"
+            //    ]
+            // ),
+            .post(
+               path:"./RunScripts/linter.sh",
+               name: "Linter",
+               basedOnDependencyAnalysis: false
+            ),
+            .post(
+               path:"./RunScripts/highlight_todo.sh",
+               name: "Highlight TODO",
+               basedOnDependencyAnalysis: false
+            ),
+          ],
+          dependencies: [
+            .external(name: "SQExtensions"),
+            .external(name: "SQKeyboard"),
+            .external(name: "SQCompositionLists"),
+            .external(name: "SQVUPER"),
+            .external(name: "Kingfisher"),
+            .external(name: "SQOperations"),
+            .external(name: "SQUIKit"),
+            .external(name: "SQDefaults"),
+            .external(name: "SnapKit"),
+            .external(name: "AsyncMoya"),
+            .external(name: "netfox"),
+            .external(name: "Rswift"),
+            .external(name: "DITranquillity")
+            // Uncomment lines if you will use Firebase Crashlytics
+            // .external(product: "FirebaseCrashlytics"),
+            // .external(product: "FirebaseAnalyticsWithoutAdIdSupport")
+          ]
+      )
+   ],
+   schemes: [
+      .scheme(
+         forTargets: ["{{ module_info.name }}"],
+         forConfiguration: .debug,
+         arguments: arguments
+      ),
+      .scheme(
+         forTargets: ["{{ module_info.name }}"],
+         forConfiguration: .beta,
+         arguments: arguments
+      ),
+      .scheme(
+         forTargets: ["{{ module_info.name }}"],
+         forConfiguration: .rc,
+         arguments: arguments
+      ),
+      .scheme(
+         forTargets: ["{{ module_info.name }}"],
+         forConfiguration: .release,
+         arguments: arguments
+      )
+   ],
+   additionalFiles: [
+        .folderReference(path: "../fastlane"),
+        .folderReference(path: "./RunScripts"),
+        // Uncomment lines if you will use some Firebase services
+        // .folderReference(path: "./Configs/FirebaseConfigs")
+        .glob(pattern: "../.gitlab-ci.yml"),
+        .glob(pattern: "../.swiftlint.yml"),
+        .glob(pattern: "../.tuist-version"),
+        .glob(pattern: "../figma-export.yaml"),
+        .glob(pattern: "../Gemfile"),
+        .glob(pattern: "../Rambafile"),
+        .glob(pattern: "../README.md"),
+        .glob(pattern: "../up.json")
+   ]
+)

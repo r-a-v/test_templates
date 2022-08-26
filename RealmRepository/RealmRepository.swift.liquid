@@ -1,0 +1,26 @@
+//
+//  RealmRepository.swift
+//  {{ module_info.project_name }}
+//
+//  Created by {{ developer.name }} on {{ date }}.
+//  Copyright {{ year }} {{ developer.company }}. All rights reserved.
+//
+
+import RealmSwift
+import SQRealm
+
+final class RealmRepository<T>: SQRealm.RealmRepository where T: RealmEntity {
+
+    typealias DBEntityType = T
+
+    var realm: Realm?
+
+    convenience init() {
+        self.init(realm: RealmHelper.instance.realm)
+    }
+
+    required init(realm: Realm?) {
+        self.realm = realm
+    }
+
+}

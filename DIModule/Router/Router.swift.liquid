@@ -1,0 +1,34 @@
+//
+//  {{ module_info.name }}Router.swift
+//  {{ module_info.project_name }}
+//
+//  Created by {{ developer.name }} on {{ date }}.
+//  Copyright {{ year }} {{ developer.company }}. All rights reserved.
+//
+
+import UIKit
+
+protocol {{ module_info.name }}Router: BaseRouter {
+
+}
+
+final class {{ module_info.name }}RouterImpl: BaseRouterImpl {
+
+// MARK: - VUPER
+    private var view: {{ module_info.name }}View? { self._internalView as? {{ module_info.name }}View }
+
+}
+
+// MARK: - {{ module_info.name }}Router
+extension {{ module_info.name }}RouterImpl: {{ module_info.name }}Router {
+
+}
+
+// MARK: - DI
+extension {{ module_info.name }}RouterImpl {
+
+    var injectView: {{ module_info.name }}View? {
+        get { nil }
+        set { self._internalView = newValue }
+    }
+}

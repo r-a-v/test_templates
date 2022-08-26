@@ -1,0 +1,284 @@
+import './Imports'
+
+default_platform(:ios)
+
+platform :ios do
+  # Main target
+  main_target = '{{ module_info.name }}'
+
+  # Targets and bundle identifiers
+  targets = {
+    '{{ module_info.name }}' => ENV['BUNDLE_IDENTIFIER']
+  }
+
+  # Project folder
+  project_folder = Pathname.new(Dir.pwd).parent.to_s
+
+  # Path .xcodeproj
+  path_to_proj_file = './Project/{{ module_info.name }}.xcodeproj'
+
+  # Is needed demo account for beta review
+  demo_account_required = true
+
+  # Language code
+  lang_code = '{{ custom_parameters.fastlane_lang_code }}'
+
+  # Application name
+  app_name = '{{ module_info.name }}'
+
+  # Prefix of Youtrack tasks
+  youtrack_prefix = ENV['YOUTRACK_TASKS_PREFIX']
+
+  # Beta review info for TestFlight
+  beta_review_info = {
+    'contact_email': 'foo@bar.com',
+    'contact_first_name': 'FirstName',
+    'contact_last_name': 'SecondName',
+    'contact_phone': '+79999999999',
+    'demo_account_name': 'demo_login',
+    'demo_account_password': 'demo_password',
+    'notes': 'this is review note for the reviewer'
+  }
+
+  # Application info for TestFlight
+  localized_app_info = {
+    lang_code => {
+      'feedback_email': 'foo@bar.com',
+      'marketing_url': 'https://foo-bar.com/',
+      'privacy_policy_url': 'https://foo-bar.com/privacy_policy_url',
+      'description': '{{ module_info.name }}'
+    }
+  }
+
+  # Channels for notifications
+  slack_channels = (ENV['SLACK_CHANNELS'] || '').split(',')
+  telegram_channels = (ENV['TELEGRAM_CHATS_IDS'] || '').split(',')
+
+  # Links to application
+  installation_link =  ENV['TESTFLIGHT_INSTALLATION_LINK']
+  app_store_connect_link = ENV['APP_STORE_CONNECT_LINK']
+
+  # Setup environment
+  before_all do
+    # Project folder
+    ENV['PROJECT_FOLDER'] = project_folder
+
+    # Setup ENV-variables for script `get_version_number`
+    ENV['FL_VERSION_NUMBER_PROJECT'] = path_to_proj_file
+    ENV['FL_VERSION_NUMBER_TARGET'] = main_target
+
+    # Setup ENV-variables for scripts `get_build_number` and `increment_build_number`
+    ENV['FL_BUILD_NUMBER_PROJECT'] = path_to_proj_file
+
+    # Setup ENV-variables for script `update_code_signing_settings`
+    ENV['FL_PROJECT_SIGNING_PROJECT_PATH'] = path_to_proj_file
+
+    # Setup ENV-variables for script `upload_symbols_to_crashlytics`
+    # Uncomment that if you want to use Firebase Crashlytics
+    # ENV['GOOGLE_SERVICES_INFO_PLIST_PATH'] = "#{project_folder}/Project/Configs/FirebaseConfigs/#{targets[main_target]}.plist"
+  end
+
+  # Upload beta version app to Testflight
+  lane :beta do
+    # Build and upload
+    testflight_distribute(
+      tags_folder: 'build_beta',
+      scheme: 'Beta'
+    )
+
+    # Notify about new beta version
+    notify_about_testflight_build(
+      app_name: app_name,
+      issue_urls: (lane_context[SharedValues::YOUTRACK_RELEASED_ISSUES] || []).map { |issue| issue[:url] }.compact,
+      installation_link: installation_link,
+      slack_channels: slack_channels,
+      telegram_channels: telegram_channels
+    )
+  end
+
+  # Upload rc version app to Testflight
+  lane :rc do
+    # Build and upload
+    testflight_distribute(
+      tags_folder: 'build_rc',
+      scheme: 'RC'
+    )
+
+    # Notify about new pre release version
+    notify_about_testflight_rc_build(
+      app_name: app_name,
+      issue_urls: (lane_context[SharedValues::YOUTRACK_RELEASED_ISSUES] || []).map { |issue| issue[:url] }.compact,
+      installation_link: installation_link,
+      slack_channels: slack_channels,
+      telegram_channels: telegram_channels
+    )
+  end
+
+  lane :testflight_distribute do |options|
+    tags_folder = options[:tags_folder]
+    scheme = options[:scheme]
+
+    # Check last tag on the current branch
+    if ENV['CI_PIPELINE_SOURCE'] == 'schedule'
+      last_release_tag = last_git_tag(pattern: "#{tags_folder}/*")
+      if tag_is_last_commit(tag: last_release_tag)
+        puts 'Deploy is not needed'
+        next
+      end
+    end
+
+    # Executing pre-scripts
+    pre_deploy(
+      need_clear_derived_data: false
+    )
+
+    # Settings codesign build
+    setup_code_signing(
+      targets: targets
+    )
+
+    # Fetching released tasks
+    fetch_released_issues(
+      tags_folder: tags_folder,
+      issues_prefix: youtrack_prefix
+    )
+
+    # Build app (http://docs.fastlane.tools/actions/gym/#gym)
+    build_app(
+      clean: true,
+      scheme: scheme,
+      export_method: 'app-store'
+    )
+
+    # Upload build Testflight (http://docs.fastlane.tools/actions/pilot/#pilot)
+    upload_to_testflight(
+      notify_external_testers: !ENV['PILOT_GROUPS'].nil? && ENV['PILOT_GROUPS'] != '',
+      distribute_external: !ENV['PILOT_GROUPS'].nil? && ENV['PILOT_GROUPS'] != '',
+      demo_account_required: demo_account_required,
+      beta_app_review_info: beta_review_info,
+      localized_app_info: localized_app_info,
+      localized_build_info: {
+        lang_code => {
+          'whats_new': (lane_context[SharedValues::YOUTRACK_RELEASED_ISSUES] || []).map { |issue| issue[:summary] }.compact.join("\n")
+        }
+      }
+    )
+
+    # After deploy scripts
+    post_deploy(
+      tags_folder: tags_folder
+    )
+  end
+
+  # Making and upload release build to the App Store
+  lane :release do
+    submit_review = options[:submit_review]
+    tags_folder = 'build_release'
+
+    # Executing pre-scripts
+    pre_deploy(
+      need_clear_derived_data: false
+    )
+
+    # Settings codesign build
+    setup_code_signing(
+      targets: targets
+    )
+
+    # Build application (http://docs.fastlane.tools/actions/gym/#gym)
+    build_app(
+      clean: true,
+      scheme: 'Release',
+      export_method: 'app-store'
+    )
+
+    # Fetch current version and build numbers
+    version_number = get_version_number
+    build_number = get_build_number
+
+    unless submit_review
+      # Upload build Testflight (http://docs.fastlane.tools/actions/pilot/#pilot)
+      upload_to_testflight(
+        notify_external_testers: false,
+        distribute_external: false,
+        demo_account_required: demo_account_required,
+        beta_app_review_info: beta_review_info,
+        localized_app_info: localized_app_info,
+        localized_build_info: {
+          lang_code => {
+            'whats_new': 'Release build'
+          }
+        }
+      )
+
+      # Upload to App Store (http://docs.fastlane.tools/actions/deliver/#deliver)
+      upload_to_app_store(
+        submit_for_review: false,
+        force: true,
+        skip_screenshots: true,
+        skip_metadata: true,
+        skip_binary_upload: true,
+        precheck_include_in_app_purchases: false,
+        app_version: version_number,
+        build_number: build_number
+      )
+
+      # Notification about uploading new release build
+      notify_about_appstore_upload_build(
+        app_name: app_name,
+        slack_channels: slack_channels,
+        telegram_channels: telegram_channels,
+        app_store_connect_link: app_store_connect_link
+      )
+    else
+      # Upload build to App Store (http://docs.fastlane.tools/actions/deliver/#deliver)
+      upload_to_app_store(
+        submit_for_review: true,
+        automatic_release: false,
+        phased_release: true,
+        force: true,
+        overwrite_screenshots: true,
+        app_version: version_number,
+        precheck_include_in_app_purchases: false
+      )
+
+      # Notify about app review submit
+      review_slack_notifier(
+        app_name: app_name,
+        slack_channels: slack_channels,
+        telegram_channels: telegram_channels,
+        app_store_connect_link: app_store_connect_link
+      )
+    end
+
+    # After deploy scripts
+    post_deploy(
+      tags_folder: tags_folder
+    )
+  end
+
+  # Notify about any errors
+  lane :notify_error do
+    notify_about_error(
+      slack_channels: slack_channels
+    )
+  end
+
+  # Update dsyms from AppStoreConnect
+  lane :update_dsyms do |options|
+    download_and_update_dsym(
+      version: options[:version],
+      build_number: options[:build_number]
+    )
+  end
+
+  # Update design from figma
+  lane :sync_figma do
+    Dir.chdir('../') do
+      `figma-export colors -i figma-export.yaml`
+      `figma-export icons -i figma-export.yaml`
+      `figma-export images -i figma-export.yaml`
+      `figma-export typography -i figma-export.yaml`
+    end
+  end
+end

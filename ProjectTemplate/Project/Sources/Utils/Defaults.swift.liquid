@@ -1,0 +1,21 @@
+//
+//  Defaults.swift
+//  {{ module_info.name }}
+//
+//  Created by {{ developer.name }} on {{ date }}.
+//  Copyright {{ year }} {{ developer.company }}. All rights reserved.
+//
+
+import Foundation
+import SQDefaults
+
+struct Defaults {
+
+    @StoredValue(key: .defaultValue, defaultValue: "DefaultValue")
+    static var defaultValue: String!
+}
+
+private extension String {
+
+    static let defaultValue = "defaultValue"
+}

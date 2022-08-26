@@ -1,0 +1,31 @@
+//
+//  DIHelper.swift
+//  {{ module_info.name }}
+//
+//  Created by {{ developer.name }} on {{ date }}.
+//  Copyright {{ year }} {{ developer.company }}. All rights reserved.
+
+import DITranquillity
+
+// MARK: - DI Helper
+final class DIHelper {
+
+    static let instance = DIHelper()
+
+    internal let container = DIContainer()
+
+    init() {
+        self.registerUseCases()
+        self.registerManagers()
+        self.registerModules()
+
+        #if DEBUG
+        DISetting.Log.level = .verbose
+        if !self.container.makeGraph().checkIsValid(checkGraphCycles: true) {
+            fatalError("Something went wrong with DI")
+        }
+        #endif
+
+        self.container.initializeSingletonObjects()
+    }
+}

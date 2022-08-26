@@ -1,0 +1,11 @@
+# Template information section
+name: "RealmEntity"
+summary: "Entity with that realm-storable mirror"
+author: "Sequenia"
+version: "1.0.0"
+license: "MIT"
+
+# The declarations for code files
+code_files:
+- {name: Entity.swift, path: Entity.swift.liquid}
+- {name: RealmEntity.swift, path: RealmEntity.swift.liquid}

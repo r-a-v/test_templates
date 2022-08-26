@@ -1,0 +1,59 @@
+import ProjectDescription
+import TuistUtils
+
+let dependencies = Dependencies(
+    swiftPackageManager: .init(
+        [
+//            .local(path: "../SQDevKit"),
+            .remote(
+                url: "https://github.com/sequenia/SQDevKit.git",
+                requirement: .exact("2.0.12")
+            ),
+            .remote(
+                url: "https://github.com/SnapKit/SnapKit.git",
+                requirement: .upToNextMajor(from: "5.0.1")
+            ),
+            .remote(
+                url: "https://github.com/onevcat/Kingfisher.git",
+                requirement: .upToNextMajor(from: "7.2.2")
+            ),
+            // .remote(
+            //     url: "https://github.com/firebase/firebase-ios-sdk.git",
+            //     requirement: .upToNextMajor(from: "8.10.0")
+            // ),
+            .remote(
+                url: "https://github.com/mac-cain13/R.swift.Library",
+                requirement: .upToNextMajor(from: "5.4.0")
+            ),
+            .remote(
+                url: "https://github.com/Moya/Moya.git",
+                requirement: .branch("development")
+            ),
+            .remote(
+                url: "https://github.com/kasketis/netfox.git",
+                requirement: .upToNextMajor(from: "1.21.0")
+            ),
+            .remote(
+                url: "https://github.com/ivlevAstef/DITranquillity.git",
+                requirement: .upToNextMajor(from: "4.3.4")
+            )
+        ],
+        baseSettings: .settings(
+            configurations: [
+                .debug(
+                    name: .debug
+                ),
+                .release(
+                    name: .beta
+                ),
+                .release(
+                    name: .rc
+                ),
+                .release(
+                    name: .release
+                )
+            ]
+        )
+    ),
+    platforms: [.iOS]
+)

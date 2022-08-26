@@ -1,0 +1,103 @@
+//
+//  BaseViewController.swift
+//  {{ module_info.name }}
+//
+//  Created by {{ developer.name }} on {{ date }}.
+//  Copyright {{ year }} {{ developer.company }}. All rights reserved.
+//
+
+import UIKit
+import SQExtensions
+import SQKeyboard
+import SQVUPER
+
+// MARK: - VUPER View extensions
+protocol BaseView: View {
+
+    @discardableResult
+    func injectPresenter(_ presenter: BasePresenter) -> Self
+}
+
+// MARK: - Base View Controller
+class BaseViewController: UIViewController,
+                          UIAdaptivePresentationControllerDelegate,
+                          BaseView,
+                          KeyboardProtocol {
+
+// MARK: - VUPER
+    internal var _internalPresenter: BasePresenter?
+
+// MARK: - Properties
+    internal private(set) var keyboardIsShown = false
+    internal private(set) var keyboardHeight: CGFloat = .zero
+    internal var didEndShowKeyboardTimer: Timer?
+
+    internal var barStyle: BarStyle {
+        .white
+    }
+
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return .lightContent
+    }
+
+    public var isAllowedBackItem: Bool {
+        return self.navigationController?.viewControllers.count != 1
+    }
+
+// MARK: - Life cycle
+    override func loadView() {
+        self.view = UIView()
+        self.view.backgroundColor = .white
+    }
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+
+    }
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+
+        self.navigationController?.sq.setNavigationBarStyle(self.barStyle)
+        self.registerForKeyboardEvents()
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+
+        self.unregisterForKeyboardEvents()
+    }
+
+// MARK: - VUPER View - Loading indicator
+    func setLoadingVisible(_ visible: Bool) {
+
+    }
+
+// MARK: - VUPER View - Error message
+    func showErrorMessage(_ message: String?) {
+
+    }
+
+    func showErrorMessage(_ message: String?, retryBlock: @escaping () -> Void) {
+
+    }
+
+// MARK: - Keyboard
+    func handleKeyboard(withFrame frame: CGRect,
+                        animationDuration: TimeInterval,
+                        animationOptions: UIView.AnimationOptions,
+                        isShow: Bool) {
+
+        self.keyboardHeight = frame.height
+        self.keyboardIsShown = isShow
+    }
+
+    func didEndShowKeyboard() { }
+
+// MARK: - Base view - DI
+    @discardableResult
+    func injectPresenter(_ presenter: BasePresenter) -> Self {
+        self._internalPresenter = presenter
+        return self
+    }
+}

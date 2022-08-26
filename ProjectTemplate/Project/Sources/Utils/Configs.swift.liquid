@@ -1,0 +1,22 @@
+//
+//  Configs.swift
+//  {{ module_info.name }}
+//
+//  Created by {{ developer.name }} on {{ date }}.
+//  Copyright {{ year }} {{ developer.company }}. All rights reserved.
+//
+
+import Foundation
+import SQExtensions
+
+struct Configs {
+
+    static var isNetfoxAllowed: Bool {
+        Bundle.sq.boolPropertyForKey(.isNetfoxAllowed) ?? false
+    }
+}
+
+private extension String {
+
+    static let isNetfoxAllowed = "isNetfoxAllowed"
+}
