@@ -88,10 +88,6 @@ code_files:
 # BarStyle
 - {custom_name: BarStyle.swift, name: Project/Sources/CustomUI/BarStyle/BarStyle.swift, path: Project/Sources/CustomUI/BarStyle/BarStyle.swift.liquid}
 
-# Authentication
-- {custom_name: Authentication.swift, name: Project/Sources/Entities/Auth/Authentication.swift, path: Project/Sources/Entities/Auth/Authentication.swift.liquid}
-- {custom_name: Token.swift, name: Project/Sources/Entities/Auth/Token.swift, path: Project/Sources/Entities/Auth/Token.swift.liquid}
-
 # MoyaExtensions
 - {custom_name: MoyaProvider+Extensions.swift, name: Project/Sources/Extensions/Moya/MoyaProvider+Extensions.swift, path: Project/Sources/Extensions/Moya/MoyaProvider+Extensions.swift.liquid}
 - {custom_name: PluginType+DefaultPlugins.swift, name: Project/Sources/Extensions/Moya/PluginType+DefaultPlugins.swift, path: Project/Sources/Extensions/Moya/PluginType+DefaultPlugins.swift.liquid}
@@ -103,15 +99,8 @@ code_files:
 # BaseProvider
 - {custom_name: BaseProvider.swift, name: Project/Sources/Utils/Network/BaseProvider.swift, path: Project/Sources/Utils/Network/BaseProvider.swift.liquid}
 
-# AuthProvider
-- {custom_name: AuthProvider.swift, name: Project/Sources/Utils/Network/Providers/Auth/AuthProvider.swift, path: Project/Sources/Utils/Network/Providers/Auth/AuthProvider.swift.liquid}
-
 # NetworkError
 - {custom_name: NetworkError.swift, name: Project/Sources/Utils/Network/NetworkError.swift, path: Project/Sources/Utils/Network/NetworkError.swift.liquid}
-
-# TokenManager
-- {custom_name: TokenManager.swift, name: Project/Sources/Utils/Tokens/TokenManager.swift, path: Project/Sources/Utils/Tokens/TokenManager.swift.liquid}
-- {custom_name: TokenManagerDIPart.swift, name: Project/Sources/Utils/Tokens/TokenManagerDIPart.swift, path: Project/Sources/Utils/Tokens/TokenManagerDIPart.swift.liquid}
 
 # Environment
 - {custom_name: Environment.swift, name: Project/Sources/Utils/Environment.swift, path: Project/Sources/Utils/Environment.swift.liquid}

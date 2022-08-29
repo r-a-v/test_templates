@@ -13,13 +13,9 @@ struct Defaults {
 
     @StoredValue(key: .environment, defaultValue: Environment.test)
     static var environment: Environment!
-
-    @StoredValue(key: .authentication, defaultValue: nil)
-    static var authentication: Authentication?
 }
 
 private extension String {
 
-    static let environment      = "environment"
-    static let authentication   = "authentication"
+    static let environment = "environment"
 }

@@ -51,6 +51,22 @@ extension MoyaProvider {
 
     @discardableResult
     func makeCancellableRequest(_ target: Target) async -> Result<JSON, NetworkError> {
+        if target.requiresAccessToken {
+            switch await self.tokenManager.refreshTokensIfNeeds() {
+            case .success:
+                return await self.makeRequestWithCheckedContinuation(target)
+                
+            case let .failure(error):
+                return .failure(error)
+            }
+        }
+
+        return await self.makeRequestWithCheckedContinuation(target)
+
+    }
+
+    @discardableResult
+    private func makeRequestWithCheckedContinuation(_ target: Target) async -> Result<JSON, NetworkError> {
         await withCheckedContinuation { continuation in
             self.task?.cancel()
 
@@ -62,7 +78,7 @@ extension MoyaProvider {
                     continuation.resume(returning: .success(json))
 
                 case let .failure(error):
-                    if task?.isCancelled ?? true {
+                    if task?.isCancelled ?? false, error.code == .canceledError {
                         continuation.resume(returning: .failure(.canceledError))
                         return
                     }

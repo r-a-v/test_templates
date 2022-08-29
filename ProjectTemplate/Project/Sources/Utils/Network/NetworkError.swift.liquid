@@ -23,15 +23,6 @@ class NetworkError: Error {
         self.message = message
         self.json = json
     }
-
-    init?(withJson json: JSON) {
-        guard let code = json["code"].string,
-              let message = json["message"].string else { return nil }
-
-        self.code = code
-        self.message = message
-        self.json = json
-    }
 }
 
 extension NetworkError: Equatable {
