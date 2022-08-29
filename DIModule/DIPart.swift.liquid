@@ -33,3 +33,11 @@ final class {{ module_info.name }}DIPart: DIPart {
             .lifetime(.objectGraph)
     }
 }
+
+extension DIModules {
+    
+    @objc
+    func loadModule{{ module_info.name }}DIPart() {
+        self.parts.append({{ module_info.name }}DIPart.self)
+    }
+}

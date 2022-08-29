@@ -11,10 +11,6 @@ import SQExtensions
 import SnapKit
 import SQUIKit
 
-#if DEBUG && canImport(SwiftUI)
-import SwiftUI
-#endif
-
 final class {{ module_info.name }}View: UICollectionReusableView {
 
 // MARK: - Reusable identifier
@@ -58,23 +54,3 @@ extension {{ module_info.name }}View: SQConfigurableView {
 
     }
 }
-
-// MARK: - Preview
-#if DEBUG
-struct {{ module_info.name }}View_Previews: PreviewProvider {
-
-    static var previews: some View {
-        Group {
-            UIViewPreview {
-                {{ module_info.name }}View()
-                    .bind(
-                        model: {{ module_info.name }}Model(
-                            id: "previewIdentifier"
-                        )
-                    )
-            }
-            .previewLayout(.fixed(width: 375, height: 100))
-        }
-    }
-}
-#endif

@@ -25,7 +25,7 @@ extension DIHelper {
         var methodCount: UInt32 = .zero
 
         guard let methodList = class_copyMethodList(
-            DIModules.self,
+            DIManagers.self,
             &methodCount
         ) else { return }
 

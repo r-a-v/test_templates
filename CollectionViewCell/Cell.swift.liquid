@@ -10,10 +10,6 @@ import UIKit
 import SnapKit
 import SQUIKit
 
-#if DEBUG && canImport(SwiftUI)
-import SwiftUI
-#endif
-
 final class {{ module_info.name }}Cell: UICollectionViewCell {
 
 // MARK: - Model
@@ -49,23 +45,3 @@ extension {{ module_info.name }}Cell: SQConfigurableView {
     func setupLayout() {
     }
 }
-
-// MARK: - Preview
-#if DEBUG
-struct {{ module_info.name }}Cell_Previews: PreviewProvider {
-
-    static var previews: some View {
-        Group {
-            UIViewPreview {
-                {{ module_info.name }}Cell()
-                    .bind(
-                        model: {{ module_info.name }}Model(
-                            id: "previewIdentifier"
-                        )
-                    )
-            }
-            .previewLayout(.fixed(width: 375, height: 100))
-        }
-    }
-}
-#endif
