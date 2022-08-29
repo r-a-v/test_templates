@@ -1,0 +1,30 @@
+
+//
+//  Authentication.swift
+//  {{ module_info.name }}
+//
+//  Created by {{ developer.name }} on {{ date }}.
+//  Copyright {{ year }} {{ developer.company }}. All rights reserved.
+//
+
+import Foundation
+import SwiftyJSON
+
+// MARK: - Authentication
+final class Authentication: Codable {
+
+// MARK: - Properties
+    private(set) var isPersonal: Bool = false
+    private(set) var accessToken: Token
+    private(set) var refreshToken: Token
+
+// MARK: - Init
+    init?(withJson json: JSON) {
+        guard let accessToken = Token(withJson: json["access_token"]),
+              let refreshToken = Token(withJson: json["refresh_token"]) else { return nil }
+
+        self.isPersonal = json["is_personal"].bool ?? false
+        self.accessToken = accessToken
+        self.refreshToken = refreshToken
+    }
+}

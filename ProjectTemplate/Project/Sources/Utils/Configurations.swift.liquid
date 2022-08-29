@@ -1,0 +1,77 @@
+//
+//  Configs.swift
+//  {{ module_info.name }}
+//
+//  Created by {{ developer.name }} on {{ date }}.
+//  Copyright {{ year }} {{ developer.company }}. All rights reserved.
+//
+
+import Foundation
+import SQExtensions
+
+class Configurations {
+
+    static let instance = Configurations()
+
+    private lazy var configDict: [String: AnyObject] = {
+        guard let bundle = Bundle.main.path(forResource: .configFileName, ofType: "plist"),
+              let dict = NSDictionary(contentsOfFile: bundle) as? [String: AnyObject] else { return [ : ] }
+        return dict
+    }()
+
+    private lazy var serverConfigs: [Environment: ServerConfiguration] = {
+        var configs = [Environment: ServerConfiguration]()
+        self.configDict.forEach { key, value in
+            guard let environment = Environment(rawValue: key),
+                  let value = value as? [String: Any],
+                  let baseUrlString = value[.baseUrlProperty] as? String,
+                  let baseUrl = URL(string: baseUrlString),
+                  let secretKey = value[.secretKeyProperty] as? String else { return }
+
+            configs[environment] = ServerConfiguration(baseUrl: baseUrl, secretKey: secretKey)
+        }
+        return configs
+    }()
+
+    private init() {
+
+    }
+}
+
+extension Configurations {
+
+    var isSystemLoggerAllowed: Bool {
+        Bundle.sq.boolPropertyForKey(.isSystemLoggerAllowed) ?? false
+    }
+
+    var isChangingDomainsAllowed: Bool {
+        Bundle.sq.boolPropertyForKey(.isChangingDomainsAllowed) ?? false
+    }
+
+    var baseURL: URL {
+        // swiftlint:disable:next force_unwrapping
+        self.serverConfigs[Environment.currentEnvironment]!.baseUrl
+    }
+
+    var secretKey: String {
+        // swiftlint:disable:next force_unwrapping
+        self.serverConfigs[Environment.currentEnvironment]!.secretKey
+    }
+}
+
+private extension String {
+
+    static let configFileName = "Configuration"
+
+    static let baseUrlProperty = "BaseURL"
+    static let secretKeyProperty = "SecretKey"
+
+    static let isSystemLoggerAllowed = "isSystemLoggerAllowed"
+    static let isChangingDomainsAllowed = "IsChangingDomainsAllowed"
+}
+
+private struct ServerConfiguration {
+
+    let baseUrl: URL
+    let secretKey: String
+}

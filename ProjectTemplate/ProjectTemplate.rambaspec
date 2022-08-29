@@ -49,6 +49,7 @@ code_files:
 - {custom_name: InfoPlist.strings, name: Project/Resources/Strings/{{ custom_parameters.lang_code }}.lproj/InfoPlist.strings, path: Project/Resources/Strings/InfoPlist.strings.liquid}
 - {custom_name: Localizable.strings, name: Project/Resources/Strings/{{ custom_parameters.lang_code }}.lproj/Localizable.strings, path: Project/Resources/Strings/Localizable.strings.liquid}
 - {custom_name: Localizable.stringsdict, name: Project/Resources/Strings/{{ custom_parameters.lang_code }}.lproj/Localizable.stringsdict, path: Project/Resources/Strings/Localizable.stringsdict.liquid}
+- {custom_name: Network.strings, name: Project/Resources/Strings/{{ custom_parameters.lang_code }}.lproj/Network.strings, path: Project/Resources/Strings/Network.strings.liquid}
 
 # RunScripts
 - {custom_name: crashlytics.sh, name: Project/RunScripts/crashlytics.sh, path: Project/RunScripts/crashlytics.sh.liquid}
@@ -75,7 +76,7 @@ code_files:
 - {custom_name: DIHelper+UseCases.swift, name: Project/Sources/DI/DIHelper+UseCases.swift, path: Project/Sources/DI/DIHelper+UseCases.swift.liquid}
 
 # Configs
-- {custom_name: Configs.swift, name: Project/Sources/Utils/Configs.swift, path: Project/Sources/Utils/Configs.swift.liquid}
+- {custom_name: Configurations.swift, name: Project/Sources/Utils/Configurations.swift, path: Project/Sources/Utils/Configurations.swift.liquid}
 
 # Defaults
 - {custom_name: Defaults.swift, name: Project/Sources/Utils/Defaults.swift, path: Project/Sources/Utils/Defaults.swift.liquid}
@@ -84,7 +85,35 @@ code_files:
 - {custom_name: AppDelegate.swift, name: Project/Sources/AppDelegate.swift, path: Project/Sources/AppDelegate.swift.liquid}
 
 # BarStyle
-- {custom_name: BarStyle.swift, name: Project/Sources/BarStyle.swift, path: Project/Sources/BarStyle.swift.liquid}
+- {custom_name: BarStyle.swift, name: Project/Sources/CustomUI/BarStyle/BarStyle.swift, path: Project/Sources/CustomUI/BarStyle/BarStyle.swift.liquid}
+
+# Authentication
+-{custom_name: Authentication.swift, name: Project/Sources/Entities/Auth/Authentication.swift, path: Project/Sources/Entities/Auth/Authentication.swift.liquid}
+-{custom_name: Token.swift, name: Project/Sources/Entities/Auth/Token.swift, path: Project/Sources/Entities/Auth/Token.swift.liquid}
+
+# MoyaExtensions
+-{custom_name: MoyaProvider+Extensions.swift, name: Project/Sources/Extensions/Moya/MoyaProvider+Extensions.swift, path: Project/Sources/Extensions/Moya/MoyaProvider+Extensions.swift.liquid}
+-{custom_name: PluginType+DefaultPlugins.swift, name: Project/Sources/Extensions/Moya/PluginType+DefaultPlugins.swift, path: Project/Sources/Extensions/Moya/PluginType+DefaultPlugins.swift.liquid}
+-{custom_name: Target+Extensions.swift, name: Project/Sources/Extensions/Moya/Target+Extensions.swift, path: Project/Sources/Extensions/Moya/Target+Extensions.swift.liquid}
+
+# StringExtensions
+-{custom_name: String+ErrorCodes.swift, name: Project/Sources/Extensions/String/String+ErrorCodes.swift, path: Project/Sources/Extensions/String/String+ErrorCodes.swift.liquid}
+
+# BaseProvider
+-{custom_name: BaseProvider.swift, name: Project/Sources/Utils/Network/BaseProvider.swift, path: Project/Sources/Utils/Network/BaseProvider.swift.liquid}
+
+# AuthProvider
+-{custom_name: AuthProvider.swift, name: Project/Sources/Utils/Network/Providers/Auth/AuthProvider.swift, path: Project/Sources/Utils/Network/Providers/Auth/AuthProvider.swift.liquid}
+
+# NetworkError
+-{custom_name: NetworkError.swift, name: Project/Sources/Utils/Network/NetworkError.swift, path: Project/Sources/Utils/Network/NetworkError.swift.liquid}
+
+# TokenManager
+-{custom_name: TokenManager.swift, name: Project/Sources/Utils/Tokens/TokenManager.swift, path: Project/Sources/Utils/Tokens/TokenManager.swift.liquid}
+-{custom_name: TokenManagerDIPart.swift, name: Project/Sources/Utils/Tokens/TokenManagerDIPart.swift, path: Project/Sources/Utils/Tokens/TokenManagerDIPart.swift.liquid}
+
+# Environment
+-{custom_name: Environment.swift, name: Project/Sources/Utils/Environment.swift, path: Project/Sources/Utils/Environment.swift.liquid}
 
 # Tuist
 - {custom_name: Project.swift, name: Project/Project.swift, path: Project/Project.swift.liquid}

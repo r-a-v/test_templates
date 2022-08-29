@@ -9,5 +9,27 @@ import DITranquillity
 
 extension DIHelper {
 
-    func registerUseCases() {}
+    func registerUseCases() {
+        let modulesObject = DIModules()
+        var methodCount: UInt32 = .zero
+
+        guard let methodList = class_copyMethodList(
+            DIModules.self,
+            &methodCount
+        ) else { return }
+
+        (Int.zero ..< Int(methodCount))
+            .map { String(cString: sel_getName(method_getName(methodList[$0]))) }
+            .filter { $0.starts(with: String.partLoadUseCasesPrefix) }
+            .forEach { modulesObject.perform( Selector($0) ) }
+
+        modulesObject.parts.forEach { part in
+            self.container.append(part: part)
+        }
+    }
+}
+
+private extension String {
+
+    static let partLoadUseCasesPrefix = "loadUseCase"
 }

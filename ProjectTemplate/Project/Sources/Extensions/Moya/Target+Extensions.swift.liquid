@@ -1,0 +1,21 @@
+//
+//  Target+Extensions.swift
+//  {{ module_info.name }}
+//
+//  Created by {{ developer.name }} on {{ date }}.
+//  Copyright {{ year }} {{ developer.company }}. All rights reserved.
+
+import Moya
+
+extension TargetType {
+
+    var requiresAccessToken: Bool {
+        switch (self as? AccessTokenAuthorizable)?.authorizationType {
+        case .bearer:
+            return true
+
+        default:
+            return false
+        }
+    }
+}

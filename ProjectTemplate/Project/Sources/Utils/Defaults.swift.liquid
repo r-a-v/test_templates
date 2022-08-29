@@ -11,11 +11,15 @@ import SQDefaults
 
 struct Defaults {
 
-    @StoredValue(key: .defaultValue, defaultValue: "DefaultValue")
-    static var defaultValue: String!
+    @StoredValue(key: .environment, defaultValue: Environment.test)
+    static var environment: Environment!
+
+    @StoredValue(key: .authentication, defaultValue: nil)
+    static var authentication: Authentication?
 }
 
 private extension String {
 
-    static let defaultValue = "defaultValue"
+    static let environment      = "environment"
+    static let authentication   = "authentication"
 }

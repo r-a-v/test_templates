@@ -1,0 +1,134 @@
+//
+//  MoyaProvider+Extensions.swift
+//  {{ module_info.name }}
+//
+//  Created by {{ developer.name }} on {{ date }}.
+//  Copyright {{ year }} {{ developer.company }}. All rights reserved.
+
+import Moya
+import AsyncMoya
+import SwiftyJSON
+import Foundation
+
+private struct MoyaProviderHashable {
+
+    static var task: UInt8 = 0
+}
+
+// MARK: - Moya provider
+extension MoyaProvider {
+
+    private var tokenManager: TokenManager {
+        DIHelper.instance.tokenManager
+    }
+
+    var task: _Concurrency.Task<Void, Never>? {
+        get {
+            guard let value = objc_getAssociatedObject(self, &MoyaProviderHashable.task) as? _Concurrency.Task<Void, Never> else {
+                return nil
+            }
+            return value
+        }
+        set {
+            objc_setAssociatedObject(self, &MoyaProviderHashable.task, newValue, objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        }
+    }
+
+    @discardableResult
+    func makeRequest(_ target: Target) async -> Result <JSON, NetworkError> {
+        if target.requiresAccessToken {
+            switch await self.tokenManager.refreshTokensIfNeeds() {
+            case .success:
+                return await self.innerMakeRequest(target)
+
+            case .failure(let error):
+                return .failure(error)
+            }
+        }
+
+        return await self.innerMakeRequest(target)
+    }
+
+    @discardableResult
+    func makeCancellableRequest(_ target: Target) async -> Result<JSON, NetworkError> {
+        await withCheckedContinuation { continuation in
+            self.task?.cancel()
+
+            self.task = AsyncTask { [task] in
+                let result = await self.innerMakeRequest(target)
+
+                switch result {
+                case let .success(json):
+                    continuation.resume(returning: .success(json))
+
+                case let .failure(error):
+                    if task?.isCancelled ?? true {
+                        continuation.resume(returning: .failure(.canceledError))
+                        return
+                    }
+
+                    continuation.resume(returning: .failure(error))
+                }
+            }
+        }
+    }
+
+    @discardableResult
+    private func innerMakeRequest(_ target: Target) async -> Result<JSON, NetworkError> {
+        switch await self.request(target) {
+        case .success(let response):
+
+            if let str = try? response.mapString(),
+               str.trimmingCharacters(in: .newlines).isEmpty {
+                return .success(JSON())
+            }
+
+            do {
+                let json = JSON(try response.mapJSON())
+                if let error = NetworkError(withJson: json) {
+                    if target.requiresAccessToken && error.code == .unauthorized {
+                        switch await self.tokenManager.refreshTokensIfNeeds(force: true) {
+                        case .success:
+                            return await self.innerMakeRequest(target)
+
+                        case .failure(let error):
+                            return .failure(error)
+                        }
+                    } else {
+                        return .failure(error)
+                    }
+                } else {
+                    return .success(json)
+                }
+            } catch {
+                return .failure(.unrecognizedResponse)
+            }
+
+        case .failure(let moyaError):
+            return .failure(self.processMoyaError(moyaError))
+        }
+    }
+
+    private func processMoyaError(_ moyaError: MoyaError) -> NetworkError {
+        switch moyaError {
+        case .underlying(let underlyingError, _):
+            guard let afError = underlyingError.asAFError,
+                  let error = afError.underlyingError as? NSError else { return .unrecognizedError }
+
+                if error.code == NSURLErrorTimedOut {
+                    return .slowNetworkConnectionError
+                } else if error.code == NSURLErrorCannotFindHost ||
+                          error.code == NSURLErrorNetworkConnectionLost ||
+                          error.code == NSURLErrorNotConnectedToInternet ||
+                          error.code == NSURLErrorCannotConnectToHost ||
+                          error.code == NSURLErrorDataNotAllowed {
+                    return .noNetworkConnectionError
+                } else {
+                    return .unrecognizedError
+                }
+
+        default:
+            return .unrecognizedError
+        }
+    }
+}

@@ -24,6 +24,7 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil
     ) -> Bool {
         self.setThirdPartyLibs(options: launchOptions)
+        self.setupSystemLogger()
         self.setInitialViewController()
 
         return true
@@ -34,6 +35,13 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
         if Configs.isNetfoxAllowed {
             NFX.sharedInstance().start()
         }
+    }
+
+// MARK: - Setup logger
+    private func setupSystemLogger() {
+        if !Configurations.instance.isSystemLoggerAllowed { return }
+
+        NFX.sharedInstance().start()
     }
     
 // MARK: - Set Initial View Controller

@@ -28,7 +28,7 @@ extension DIHelper {
         (Int.zero ..< Int(methodCount))
             .map { String(cString: sel_getName(method_getName(methodList[$0]))) }
             .filter { $0.starts(with: String.partLoadMethodsPrefix) }
-            .forEach { modulesObject.perform(Selector(stringLiteral: $0)) }
+            .forEach { modulesObject.perform( Selector($0) ) }
         
         modulesObject.parts.forEach { part in
             self.container.append(part: part)
@@ -38,5 +38,5 @@ extension DIHelper {
 
 private extension String {
     
-    static let partLoadMethodsPrefix = "load"
+    static let partLoadMethodsPrefix = "loadModule"
 }
