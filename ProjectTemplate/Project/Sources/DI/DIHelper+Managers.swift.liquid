@@ -16,10 +16,6 @@ class DIManagers: NSObject {
 
 extension DIHelper {
 
-    var tokenManager: TokenManager {
-        self.container.resolve()
-    }
-
     func registerManagers() {
         let modulesObject = DIManagers()
         var methodCount: UInt32 = .zero
