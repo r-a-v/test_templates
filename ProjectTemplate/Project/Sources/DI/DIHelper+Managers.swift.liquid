@@ -21,7 +21,7 @@ extension DIHelper {
     }
 
     func registerManagers() {
-        let modulesObject = DIModules()
+        let modulesObject = DIManagers()
         var methodCount: UInt32 = .zero
 
         guard let methodList = class_copyMethodList(

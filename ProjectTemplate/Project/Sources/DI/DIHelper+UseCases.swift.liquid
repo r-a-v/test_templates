@@ -17,7 +17,7 @@ class DIUseCases: NSObject {
 extension DIHelper {
 
     func registerUseCases() {
-        let modulesObject = DIModules()
+        let modulesObject = DIUseCases()
         var methodCount: UInt32 = .zero
 
         guard let methodList = class_copyMethodList(
