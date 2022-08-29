@@ -27,6 +27,7 @@ class BasePresenterImpl: BasePresenter {
 
 // MARK: - VUPER
     internal weak var _internalView: BaseView?
+    internal var _internalUseCases: BaseUseCases?
     internal var _internalRouter: BaseRouter?
 
 // MARK: - Properties
@@ -61,6 +62,12 @@ class BasePresenterImpl: BasePresenter {
     @discardableResult
     func injectRouter(_ router: BaseRouter) -> Self {
         self._internalRouter = router
+        return self
+    }
+
+    @discardableResult
+    func injectUseCases(_ useCases: BaseUseCases) -> Self {
+        self._internalUseCases = useCases
         return self
     }
 

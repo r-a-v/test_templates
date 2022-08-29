@@ -65,6 +65,7 @@ code_files:
 # ViewController
 - {custom_name: BaseData.swift, name: Project/Sources/Modules/Base/Presenter/BaseData.swift, path: Project/Sources/Modules/Base/Presenter/BaseData.swift.liquid}
 - {custom_name: BasePresenter.swift, name: Project/Sources/Modules/Base/Presenter/BasePresenter.swift, path: Project/Sources/Modules/Base/Presenter/BasePresenter.swift.liquid}
+- {custom_name: BaseUseCases.swift, name: Project/Sources/Modules/Base/Presenter/BaseUseCases.swift, path: Project/Sources/Modules/Base/Presenter/BaseUseCases.swift.liquid}
 - {custom_name: BaseRouter.swift, name: Project/Sources/Modules/Base/BaseRouter/BaseRouter.swift, path: Project/Sources/Modules/Base/BaseRouter/BaseRouter.swift.liquid}
 - {custom_name: BaseViewController.swift, name: Project/Sources/Modules/Base/View/BaseViewController.swift, path: Project/Sources/Modules/Base/View/BaseViewController.swift.liquid}
 - {custom_name: BaseListViewController.swift, name: Project/Sources/Modules/Base/View/BaseListViewController.swift, path: Project/Sources/Modules/Base/View/BaseListViewController.swift.liquid}
