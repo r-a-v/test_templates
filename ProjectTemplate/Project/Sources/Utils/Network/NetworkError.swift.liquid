@@ -42,26 +42,27 @@ extension NetworkError: Equatable {
     }
 }
 
+// TODO: - Set messages for errors
 extension NetworkError {
 
     static let noNetworkConnectionError = NetworkError(
         code: .noNetworkConnection,
-        message: R.string.network.noNetworkConnection()
+        message: ""
     )
 
     static let slowNetworkConnectionError = NetworkError(
         code: .slowNetworkConnection,
-        message: R.string.network.slowNetworkConnection()
+        message: ""
     )
 
     static let unrecognizedResponse = NetworkError(
         code: .unrecognizedResponse,
-        message: R.string.network.unrecognizedResponse()
+        message: ""
     )
 
     static let unrecognizedError = NetworkError(
         code: .unrecognizedError,
-        message: R.string.network.unrecognizedError()
+        message: ""
     )
 
     static let canceledError = NetworkError(
