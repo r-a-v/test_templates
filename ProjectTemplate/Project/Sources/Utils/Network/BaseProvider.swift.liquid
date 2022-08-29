@@ -17,24 +17,10 @@ extension APITarget {
     }
 
     var headers: [String: String]? {
-        let headers: [String: String] = [
-            .clientSecret: Configurations.instance.secretKey
-        ]
+        let headers: [String: String] = []
 
         return headers
     }
 
     var sampleData: Data { Data() }
-
-    var authorizationType: AuthorizationType? {
-        return .bearer
-    }
-}
-
-extension String {
-
-    static let apiV1Path = "/api/v1"
-
-    static let clientSecret = "X-Client-Secret"
-    static let refreshToken = "X-Refresh-Token"
 }
