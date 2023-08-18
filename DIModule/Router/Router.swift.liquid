@@ -15,20 +15,11 @@ protocol {{ module_info.name }}Router: BaseRouter {
 final class {{ module_info.name }}RouterImpl: BaseRouterImpl {
 
 // MARK: - VUPER
-    private var view: {{ module_info.name }}View? { self._internalView as? {{ module_info.name }}View }
+    private var view: {{ module_info.name }}View?
 
 }
 
 // MARK: - {{ module_info.name }}Router
 extension {{ module_info.name }}RouterImpl: {{ module_info.name }}Router {
 
-}
-
-// MARK: - DI
-extension {{ module_info.name }}RouterImpl {
-
-    var injectView: {{ module_info.name }}View? {
-        get { nil }
-        set { self._internalView = newValue }
-    }
 }
