@@ -9,10 +9,12 @@
 import Foundation
 import SQExtensions
 
+// MARK: - {{ module_info.name }}Presenter
 protocol {{ module_info.name }}Presenter: BasePresenter {
 
 }
 
+// MARK: - {{ module_info.name }}PresenterImpl
 final class {{ module_info.name }}PresenterImpl: BasePresenterImpl {
 
 // MARK: - VUPER
@@ -20,6 +22,7 @@ final class {{ module_info.name }}PresenterImpl: BasePresenterImpl {
     var router: {{ module_info.name }}Router! 
     var useCases: {{ module_info.name }}UseCases! 
 
+// MARK: - Data
     private var data = {{ module_info.name }}Data()
 
 // MARK: - Life cycle

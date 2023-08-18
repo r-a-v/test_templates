@@ -8,15 +8,21 @@
 
 import UIKit
 
+// MARK: - {{ module_info.name }}Router
 protocol {{ module_info.name }}Router: BaseRouter {
 
 }
 
+// MARK: - {{ module_info.name }}RouterImpl
 final class {{ module_info.name }}RouterImpl: BaseRouterImpl {
 
 // MARK: - VUPER
-    private var view: {{ module_info.name }}View?
+    weak var view: {{ module_info.name }}View?
 
+// MARK: - Init
+    required init(view: {{ module_info.name }}View) {
+        self.view = view
+    }
 }
 
 // MARK: - {{ module_info.name }}Router

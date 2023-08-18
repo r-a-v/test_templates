@@ -19,7 +19,7 @@ final class {{ module_info.name }}DIPart: DIPart {
         container.register({{ module_info.name }}RouterImpl.init)
             .as({{ module_info.name }}Router.self)
 
-        container.register ({{ module_info.name }}PresenterImpl.init)
+        container.register({{ module_info.name }}PresenterImpl.init)
         .injection(cycle: false, \.view)
         .injection(cycle: true, \.router)
         .injection(cycle: true, \.useCases)
