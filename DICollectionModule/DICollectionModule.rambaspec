@@ -8,10 +8,13 @@ version: "1.0.0"
 
 code_files:
 # View layer
-- {name: View/ViewController.swift, path: View/ViewController.swift.liquid}
-- {name: View/Factory.swift, path: ../DITableModule/View/Factory.swift.liquid}
-- {name: View/Section.swift, path: ../DITableModule/View/Section.swift.liquid}
-- {name: View/LayoutManager.swift, path: View/LayoutManager.swift.liquid}
+- {name: Controller/ViewController.swift, path: Controller/ViewController.swift.liquid}
+- {name: Controller/ViewController+Delegates.swift, path: Controller/ViewController+Delegates.swift.liquid}
+- {name: Controller/ViewController+Sections.swift, path: Controller/ViewController+Sections.swift.liquid}
+- {name: Layout/Factory.swift, path: Layout/Factory.swift.liquid}
+- {name: Layout/Section.swift, path: Layout/Section.swift.liquid}
+- {name: Layout/LayoutManager.swift, path: View/Layout/LayoutManager.swift.liquid}
+- {name: Layout/Cells}
 
 # Presenter layer
 - {name: Presenter/Presenter.swift, path: ../DIModule/Presenter/Presenter.swift.liquid}

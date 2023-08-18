@@ -1,0 +1,27 @@
+//
+//  {{ module_info.name }}ViewController+Delegates.swift
+//  {{ module_info.project_name }}
+//
+//  Created by {{ developer.name }} on {{ date }}.
+//  Copyright {{ year }} {{ developer.company }}. All rights reserved.
+//
+
+import UIKit
+import SQUIKit
+import SQEntities
+
+// MARK: - {{ module_info.name }}LayoutManagerDelegate
+extension {{ module_info.name }}ViewController: {{ module_info.name }}LayoutManagerDelegate {
+
+    func sectionType(forSection section: Int) -> {{ module_info.name }}Section? {
+        self.sections[safe: section]?.content as? {{ module_info.name }}Section
+    }
+}
+
+// MARK: - CustomizableLayoutDelegate
+extension {{ module_info.name }}ViewController: CustomizableLayoutDelegate {
+
+    func uiSettings(for indexPath: IndexPath) -> UISettings? {
+        .init(backgroundColor: .clear)
+    }
+}

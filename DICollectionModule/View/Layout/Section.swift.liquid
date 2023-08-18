@@ -1,0 +1,72 @@
+//
+//  {{ module_info.name }}Section.swift
+//  {{ module_info.project_name }}
+//
+//  Created by {{ developer.name }} on {{ date }}.
+//  Copyright {{ year }} {{ developer.company }}. All rights reserved.
+//
+
+import Foundation
+
+enum {{ module_info.name }}SectionType {
+
+    case share(id: String)
+}
+
+struct {{ module_info.name }}Section: ShareSectionContent {
+
+    var shareType: ShareSection?
+    let type: {{ module_info.name }}SectionType
+
+    var id: String {
+        switch self.type {
+
+        default:
+            guard let id = self.shareType?.id else {
+                fatalError("Share section type did not use id")
+            }
+
+            return self.shareType?.id ?? ""
+        }
+    }
+
+    var items: [AnyHashable]
+    var header: AnyHashable?
+    var footer: AnyHashable?
+    var badge: AnyHashable?
+    var infiniteScrollEnable = false
+
+    init(
+        type: {{ module_info.name }}SectionType,
+        items: [AnyHashable],
+        infiniteScrollEnable: Bool = false,
+        header: AnyHashable? = nil,
+        footer: AnyHashable? = nil,
+        badge: AnyHashable? = nil
+    ) {
+        self.type = type
+        self.infiniteScrollEnable = infiniteScrollEnable
+        self.items = items
+        self.header = header
+        self.footer = footer
+        self.badge = badge
+    }
+
+    init(
+        shareType: ShareSection,
+        items: [AnyHashable],
+        infiniteScrollEnable: Bool = false,
+        header: AnyHashable? = nil,
+        footer: AnyHashable? = nil,
+        badge: AnyHashable? = nil
+    ) {
+        self.type = .share(id: shareType.id)
+
+        self.shareType = shareType
+        self.infiniteScrollEnable = infiniteScrollEnable
+        self.items = items
+        self.header = header
+        self.footer = footer
+        self.badge = badge
+    }
+}

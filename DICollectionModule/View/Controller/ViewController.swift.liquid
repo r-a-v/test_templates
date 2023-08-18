@@ -24,7 +24,7 @@ protocol {{ module_info.name }}View: BaseView {
 final class {{ module_info.name }}ViewController: BaseListViewController {
 
 // MARK: - VUPER
-    private var presenter: {{ module_info.name }}Presenter! { self._internalPresenter as? {{ module_info.name }}Presenter }
+    var presenter: {{ module_info.name }}Presenter!
 
 // MARK: - Layout
     private lazy var layoutManager = {{ module_info.name }}LayoutManager(delegate: self)
@@ -45,7 +45,7 @@ final class {{ module_info.name }}ViewController: BaseListViewController {
 
 // MARK: - Configure collection
     override func createCollectionViewLayout() -> UICollectionViewLayout {
-        self.layoutManager.createLayout()
+        self.layoutManager.createLayout(layoutDelegate: self)
     }
 
     override func setupCollectionView() {
@@ -76,14 +76,6 @@ extension {{ module_info.name }}ViewController: SQConfigurableView {
     }
 }
 
-// MARK: - {{ module_info.name }}LayoutManagerDelegate
-extension {{ module_info.name }}ViewController: {{ module_info.name }}LayoutManagerDelegate {
-
-    func sectionType(forSection section: Int) -> {{ module_info.name }}Section? {
-        self.sections[safe: section]?.content as? {{ module_info.name }}Section
-    }
-}
-
 // MARK: - {{ module_info.name }}View
 extension {{ module_info.name }}ViewController: {{ module_info.name }}View {
 
@@ -99,14 +91,5 @@ extension {{ module_info.name }}ViewController: {{ module_info.name }}View {
             withSectionsContent: sectionsContent,
             animated: animated
         )
-    }
-}
-
-// MARK: - DI
-extension {{ module_info.name }}ViewController {
-    
-    var injectPresenter: {{ module_info.name }}Presenter? {
-        get { nil }
-        set { self._internalPresenter = newValue }
     }
 }

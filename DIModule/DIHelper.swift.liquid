@@ -10,20 +10,13 @@ import DITranquillity
 
 extension DIHelper {
 
-  func create{{ module_info.name }}View() -> {{ module_info.name }}View {
-      let view: {{ module_info.name }}View = self.container.resolve()
-      let presenter: {{ module_info.name }}Presenter = self.container.resolve()
-      let router: {{ module_info.name }}Router = self.container.resolve()
-      let useCases: {{ module_info.name }}UseCases = self.container.resolve()
+    func {{ module_info.name }}View() -> {{ module_info.name }}View {
 
-      view.injectPresenter(presenter)
-
-      presenter.injectView(view)
-          .injectRouter(router)
-          .injectUseCases(useCases)
-
-      router.injectView(view)
-
-      return view
-  }
+        return self.container.resolve(
+            arguments: AnyArguments(
+                for: {{ module_info.name }}Presenter.self,
+                args: nil
+            )
+        )
+    }
 }

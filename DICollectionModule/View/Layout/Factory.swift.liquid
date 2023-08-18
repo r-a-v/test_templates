@@ -25,19 +25,24 @@ final class {{ module_info.name }}Factory {
 
         self.registerElements()
     }
-
 }
 
 // MARK: - SQListFactory
 extension {{ module_info.name }}Factory: SQListFactory {
 
     func registerElements() {
+
     }
 
-    func cell(forItemModel itemModel: AnyHashable, atIndexPath indexPath: IndexPath) -> UICollectionViewCell? {
-        guard let collectionView = collectionView else { return nil }
+    func cell(
+        forItemModel itemModel: AnyHashable,
+        inSection section: SQSectionContent?,
+        atIndexPath indexPath: IndexPath
+    ) -> UICollectionViewCell? {
+        guard let collectionView else { return nil }
 
         switch itemModel {
+
         default:
             return nil
         }

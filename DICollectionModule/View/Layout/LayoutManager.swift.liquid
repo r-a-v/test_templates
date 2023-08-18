@@ -22,14 +22,26 @@ final class {{ module_info.name }}LayoutManager {
         self.delegate = delegate
     }
 
-    func createLayout() -> UICollectionViewLayout {
+    func createLayout(
+        layoutDelegate: CustomizableLayoutDelegate?
+    ) -> CustomizableLayout {
         let layoutConfig = UICollectionViewCompositionalLayoutConfiguration()
 
-        return UICollectionViewCompositionalLayout(
+        let collectionViewLayout = CustomizableLayout(
             sectionProvider: { index, _ in
                 let section = self.delegate.sectionType(forSection: index)
-
                 let sectionLayout = self.layoutGroup(forSection: section)
+
+                let backgroundDecoration = NSCollectionLayoutDecorationItem.background(
+                    elementKind: .backgroundElementKind
+                )
+
+                backgroundDecoration.zIndex = -1
+
+                sectionLayout.decorationItems = [
+                    backgroundDecoration
+                ]
+
                 if section?.header != nil {
                     let header = NSCollectionLayoutBoundarySupplementaryItem(
                         layoutSize: .init(
@@ -39,8 +51,11 @@ final class {{ module_info.name }}LayoutManager {
                         elementKind: .collectionSectionHeader,
                         alignment: .top
                     )
+
+                    header.pinToVisibleBounds = true
                     sectionLayout.boundarySupplementaryItems.append(header)
                 }
+
                 if section?.footer != nil {
                     let footer = NSCollectionLayoutBoundarySupplementaryItem(
                         layoutSize: .init(
@@ -56,6 +71,10 @@ final class {{ module_info.name }}LayoutManager {
             },
             configuration: layoutConfig
         )
+
+        collectionViewLayout.delegate = layoutDelegate
+
+        return collectionViewLayout
     }
 
     private func layoutGroup(forSection section: {{ module_info.name }}Section?) -> NSCollectionLayoutSection {
