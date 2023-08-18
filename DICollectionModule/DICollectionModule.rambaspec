@@ -10,7 +10,6 @@ code_files:
 # View layer
 - {name: Controller/ViewController.swift, path: View/Controller/ViewController.swift.liquid}
 - {name: Controller/ViewController+Delegates.swift, path: View/Controller/ViewController+Delegates.swift.liquid}
-- {name: Controller/ViewController+Sections.swift, path: View/Controller/ViewController+Sections.swift.liquid}
 - {name: Layout/Cells}
 - {name: Layout/Factory.swift, path: View/Layout/Factory.swift.liquid}
 - {name: Layout/Section.swift, path: View/Layout/Section.swift.liquid}
