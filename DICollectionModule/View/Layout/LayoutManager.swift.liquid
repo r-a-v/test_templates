@@ -8,6 +8,8 @@
 
 import UIKit
 import SQExtensions
+import SQCompositionLists
+import SQUIKit
 
 protocol {{ module_info.name }}LayoutManagerDelegate: AnyObject {
 
@@ -78,12 +80,6 @@ final class {{ module_info.name }}LayoutManager {
     }
 
     private func layoutGroup(forSection section: {{ module_info.name }}Section?) -> NSCollectionLayoutSection {
-        switch section?.type {
-        case .section:
-            return .createPlainLayoutSection()
-
-        case .none:
-            return .createPlainLayoutSection()
-        }
+        return .createPlainLayoutSection()
     }
 }
