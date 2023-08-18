@@ -25,6 +25,7 @@ stages:
   script: &define_constants
     - export SSH_CONNECT="ssh $BUILD_MACHINE_SSH_USER@$BUILD_MACHINE_ADDRESS -p $BUILD_MACHINE_SSH_PORT"
     - export PROJECT_FOLDER=$BUILD_MACHINE_WORKSPACE/$CI_PROJECT_NAME
+    - export APP_STORE_API_KEY_FILE_PATH=$PROJECT_FOLDER/$APP_STORE_AUTH_KEY_ID.p8
     - export GIT_REPO_PATH=git@$GITLAB_HOST:$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME.git
 
 # Prepare workspace
@@ -39,7 +40,7 @@ stages:
       $SSH_CONNECT \
       " \
       source ~/.zshrc && \
-      [ ! -d $PROJECT_FOLDER ] && git clone $GIT_REPO_PATH $PROJECT_FOLDER || echo \"Already cloned\" && \
+      [ ! -d $PROJECT_FOLDER ] && git clone --recurse-submodules -j8 $GIT_REPO_PATH $PROJECT_FOLDER || echo \"Already cloned\" && \
       exit && \
       "
 
@@ -69,7 +70,7 @@ stages:
     # App Store Connect API variables
     - echo APP_STORE_CONNECT_API_KEY_KEY_ID="$APP_STORE_AUTH_KEY_ID" >> .env
     - echo APP_STORE_CONNECT_API_KEY_ISSUER_ID="$APP_STORE_AUTH_KEY_ISSUER" >> .env
-    - echo APP_STORE_CONNECT_API_KEY_KEY="$APP_STORE_AUTH_KEY_CONTENT" >> .env
+    - echo APP_STORE_CONNECT_API_KEY_KEY_FILEPATH="$APP_STORE_API_KEY_FILE_PATH" >> .env
     # Keychain access variables
     - echo KEYCHAIN_NAME="$BUILD_MACHINE_KEYCHAIN_NAME" >> .env
     - echo KEYCHAIN_PASSWORD="$BUILD_MACHINE_KEYCHAIN_PASSWORD" >> .env
@@ -102,6 +103,8 @@ stages:
     - echo YOUTRACK_TASKS_PREFIX="$YOUTRACK_TASKS_PREFIX" >> .env
     # Upload env file
     - scp -P $BUILD_MACHINE_SSH_PORT .env $BUILD_MACHINE_SSH_USER@$BUILD_MACHINE_ADDRESS:$PROJECT_FOLDER
+    # Upload key .p8 file
+    - scp -P $BUILD_MACHINE_SSH_PORT $APP_STORE_AUTH_KEY_FILE $BUILD_MACHINE_SSH_USER@$BUILD_MACHINE_ADDRESS:$APP_STORE_API_KEY_FILE_PATH
     # Remove env file
     - rm .env
 
@@ -115,6 +118,34 @@ beta_deploy:
     - web
   timeout: 3 hours
   environment: Beta
+  before_script:
+    - *prepare_ssh
+    - *define_constants
+    - *prepare_folders
+    - *init_repo
+    - *update_repo
+    - *init_environment
+  script: |
+    $SSH_CONNECT \
+    " \
+    source ~/.zshrc && \
+    cd $PROJECT_FOLDER && \
+    mint run tuist/tuist-up  && \
+    bundle exec fastlane beta && \
+    exit && \
+    "
+
+# Demo version deploy
+demo_deploy:
+  stage: beta
+  extends:
+    - .settings
+  only:
+    - schedules
+    - web
+  when: manual
+  timeout: 3 hours
+  environment: Demo
   before_script:
     - *prepare_ssh
     - *define_constants
@@ -160,7 +191,6 @@ rc_deploy:
     exit && \
     "
 
-
 # Release version deploy
 release_deploy:
   stage: release
@@ -203,4 +233,4 @@ notify_failure:
     bundle exec fastlane notify_error && \
     exit && \
     "
-  when: on_failure
+  when: on_failure 

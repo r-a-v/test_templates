@@ -1,0 +1,32 @@
+//
+//  {{ module_info.name }}Section.swift
+//  {{ module_info.project_name }}
+//
+//  Created by {{ developer.name }} on {{ date }}.
+//  Copyright {{ year }} {{ developer.company }}. All rights reserved.
+//
+
+import Foundation
+import Entities
+
+protocol {{ module_info.name }}Repository: AnyObject {
+
+    init(
+        remoteDataSource: {{ module_info.name }}RemoteDataSource
+    )
+}
+
+class {{ module_info.name }}RepositoryImpl {
+
+    private var remoteDataSource: {{ module_info.name }}RemoteDataSource
+
+    required init(
+        remoteDataSource: {{ module_info.name }}RemoteDataSource
+    ) {
+        self.remoteDataSource = remoteDataSource
+    }
+}
+
+extension {{ module_info.name }}RepositoryImpl: {{ module_info.name }}Repository {
+
+}

@@ -14,19 +14,14 @@ final class {{ module_info.name }}DIPart: DIPart {
     static func load(container: DIContainer) {
         container.register { {{ module_info.name }}ViewController() }
             .as({{ module_info.name }}View.self)
-            .injection(cycle: true, \.injectPresenter)
             .lifetime(.objectGraph)
 
         container.register({{ module_info.name }}PresenterImpl.init)
             .as({{ module_info.name }}Presenter.self)
-            .injection(cycle: true, \.injectView)
-            .injection(\.injectRouter)
-            .injection(\.injectUseCases)
             .lifetime(.objectGraph)
 
         container.register({{ module_info.name }}RouterImpl.init)
             .as({{ module_info.name }}Router.self)
-            .injection(\.injectView)
             .lifetime(.objectGraph)
 
         container.register({{ module_info.name }}UseCasesImpl.init)

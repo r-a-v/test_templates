@@ -34,6 +34,7 @@ code_files:
 - {custom_name: Config-beta.xcconfig, name: Project/Configs/Beta/Config-beta.xcconfig, path: Project/Configs/Beta/Config-beta.xcconfig.liquid}
 - {custom_name: Config-rc.xcconfig, name: Project/Configs/RC/Config-rc.xcconfig, path: Project/Configs/RC/Config-rc.xcconfig.liquid}
 - {custom_name: Config-release.xcconfig, name: Project/Configs/Release/Config-release.xcconfig, path: Project/Configs/Release/Config-release.xcconfig.liquid}
+- {custom_name: Servers.plist, name: Project/Configs/Servers.plist, path: Project/Configs/Servers.plist.liquid}
 
 # Assets
 - {custom_name: Contents.json, name: Project/Resources/Assets/Assets.xcassets/Contents.json, path: Project/Resources/Assets/Assets.xcassets/Contents.json.liquid}
@@ -50,6 +51,7 @@ code_files:
 - {custom_name: Localizable.strings, name: Project/Resources/Strings/{{ custom_parameters.lang_code }}.lproj/Localizable.strings, path: Project/Resources/Strings/Localizable.strings.liquid}
 - {custom_name: Localizable.stringsdict, name: Project/Resources/Strings/{{ custom_parameters.lang_code }}.lproj/Localizable.stringsdict, path: Project/Resources/Strings/Localizable.stringsdict.liquid}
 - {custom_name: Network.strings, name: Project/Resources/Strings/{{ custom_parameters.lang_code }}.lproj/Network.strings, path: Project/Resources/Strings/Network.strings.liquid}
+- {custom_name: ShortcutItems.strings, name: Project/Resources/Strings/{{ custom_parameters.lang_code }}.lproj/ShortcutItems.strings, path: Project/Resources/Strings/ShortcutItems.strings.liquid}
 
 # RunScripts
 - {custom_name: crashlytics.sh, name: Project/RunScripts/crashlytics.sh, path: Project/RunScripts/crashlytics.sh.liquid}
@@ -57,30 +59,27 @@ code_files:
 - {custom_name: link_firebase_configs.sh, name: Project/RunScripts/link_firebase_configs.sh, path: Project/RunScripts/link_firebase_configs.sh.liquid}
 - {custom_name: linter.sh, name: Project/RunScripts/linter.sh, path: Project/RunScripts/linter.sh.liquid}
 - {custom_name: r_swift.sh, name: Project/RunScripts/r_swift.sh, path: Project/RunScripts/r_swift.sh.liquid}
+- {custom_name: set_bundle_settings.sh, name: Project/RunScripts/set_bundle_settings.sh, path: Project/RunScripts/set_bundle_settings.sh.liquid}
 
-
-# Previews
-- {custom_name: UIViewPreview.swift, name: Project/Sources/Previews/UIViewPreview.swift, path: Project/Sources/Previews/UIViewPreview.swift.liquid}
-
-# ViewController
-- {custom_name: BaseData.swift, name: Project/Sources/Modules/Base/Presenter/BaseData.swift, path: Project/Sources/Modules/Base/Presenter/BaseData.swift.liquid}
-- {custom_name: BasePresenter.swift, name: Project/Sources/Modules/Base/Presenter/BasePresenter.swift, path: Project/Sources/Modules/Base/Presenter/BasePresenter.swift.liquid}
-- {custom_name: BaseUseCases.swift, name: Project/Sources/Modules/Base/Presenter/BaseUseCases.swift, path: Project/Sources/Modules/Base/Presenter/BaseUseCases.swift.liquid}
-- {custom_name: BaseRouter.swift, name: Project/Sources/Modules/Base/BaseRouter/BaseRouter.swift, path: Project/Sources/Modules/Base/BaseRouter/BaseRouter.swift.liquid}
-- {custom_name: BaseViewController.swift, name: Project/Sources/Modules/Base/View/BaseViewController.swift, path: Project/Sources/Modules/Base/View/BaseViewController.swift.liquid}
-- {custom_name: BaseListViewController.swift, name: Project/Sources/Modules/Base/View/BaseListViewController.swift, path: Project/Sources/Modules/Base/View/BaseListViewController.swift.liquid}
+# Bundle settings
+- {custom_name: Root.plist, name: Settings/Debug/Settings.bundle/Root.plist, path: Settings/Debug/Settings.bundle/Root.plist}
+- {custom_name: Root.plist, name: Settings/Release/Settings.bundle/Root.plist, path: Settings/Release/Settings.bundle/Root.plist}
 
 #DI 
 - {custom_name: DIHelper.swift, name: Project/Sources/DI/DIHelper.swift, path: Project/Sources/DI/DIHelper.swift.liquid}
+- {custom_name: DIHelper+Clients.swift, name: Project/Sources/DI/DIHelper+Clients.swift, path: Project/Sources/DI/DIHelper+Clients.swift.liquid}
+- {custom_name: DIHelper+DataSources.swift, name: Project/Sources/DI/DIHelper+DataSources.swift, path: Project/Sources/DI/DIHelper+DataSources.swift.liquid}
 - {custom_name: DIHelper+Managers.swift, name: Project/Sources/DI/DIHelper+Managers.swift, path: Project/Sources/DI/DIHelper+Managers.swift.liquid}
 - {custom_name: DIHelper+Modules.swift, name: Project/Sources/DI/DIHelper+Modules.swift, path: Project/Sources/DI/DIHelper+Modules.swift.liquid}
+- {custom_name: DIHelper+Repositories.swift, name: Project/Sources/DI/DIHelper+Repositories.swift, path: Project/Sources/DI/DIHelper+Repositories.swift.liquid}
+- {custom_name: DIHelper+Storages.swift, name: Project/Sources/DI/DIHelper+Storages.swift, path: Project/Sources/DI/DIHelper+Storages.swift.liquid}
 - {custom_name: DIHelper+UseCases.swift, name: Project/Sources/DI/DIHelper+UseCases.swift, path: Project/Sources/DI/DIHelper+UseCases.swift.liquid}
 
 # Configs
-- {custom_name: Configurations.swift, name: Project/Sources/Utils/Configurations.swift, path: Project/Sources/Utils/Configurations.swift.liquid}
-
-# Defaults
+- {custom_name: Configuration.swift, name: Project/Sources/Utils/Configuration.swift, path: Project/Sources/Utils/Configuration.swift.liquid}
 - {custom_name: Defaults.swift, name: Project/Sources/Utils/Defaults.swift, path: Project/Sources/Utils/Defaults.swift.liquid}
+- {custom_name: ServerManager.swift, name: Project/Sources/Utils/ServerManager.swift, path: Project/Sources/Utils/ServerManager.swift.liquid}
+- {custom_name: UserDefaultsObserver.swift, name: Project/Sources/Utils/UserDefaultsObserver.swift, path: Project/Sources/Utils/UserDefaultsObserver.swift.liquid}
 
 # AppDelegate
 - {custom_name: AppDelegate.swift, name: Project/Sources/AppDelegate.swift, path: Project/Sources/AppDelegate.swift.liquid}
@@ -88,27 +87,16 @@ code_files:
 # BarStyle
 - {custom_name: BarStyle.swift, name: Project/Sources/CustomUI/BarStyle/BarStyle.swift, path: Project/Sources/CustomUI/BarStyle/BarStyle.swift.liquid}
 
-# StringExtensions
-- {custom_name: String+ErrorCodes.swift, name: Project/Sources/Extensions/String/String+ErrorCodes.swift, path: Project/Sources/Extensions/String/String+ErrorCodes.swift.liquid}
-
-# BaseProvider
-- {custom_name: BaseProvider.swift, name: Project/Sources/Utils/Network/BaseProvider.swift, path: Project/Sources/Utils/Network/BaseProvider.swift.liquid}
-
-# NetworkError
-- {custom_name: NetworkError.swift, name: Project/Sources/Utils/Network/NetworkError.swift, path: Project/Sources/Utils/Network/NetworkError.swift.liquid}
-
-# Environment
-- {custom_name: Environment.swift, name: Project/Sources/Utils/Environment.swift, path: Project/Sources/Utils/Environment.swift.liquid}
-
 # Tuist
 - {custom_name: Project.swift, name: Project/Project.swift, path: Project/Project.swift.liquid}
 - {custom_name: Config.swift, name: Tuist/Config.swift, path: Tuist/Config.swift.liquid}
 - {custom_name: Dependencies.swift, name: Tuist/Dependencies.swift, path: Tuist/Dependencies.swift.liquid}
 - {custom_name: Workspace.swift, name: ./Workspace.swift, path: ./Workspace.swift.liquid}
 - {custom_name: up.json, name: ./up.json, path: ./up.json.liquid}
-- {custom_name: Mintfile, name: ./Mintfile, path: ./Mintfile.liquid}
 
 # Project Directory
+- {custom_name: README.md, name: ./README.md, path: ./README.md.liquid}
+- {custom_name: Mintfile, name: ./Mintfile, path: ./Mintfile.liquid}
 - {custom_name: Gemfile, name: ./Gemfile, path: ./Gemfile.liquid}
 - {custom_name: Podfile, name: ./Podfile, path: ./Podfile.liquid}
 - {custom_name: Rambafile, name: ./Rambafile, path: ./Rambafile.liquid}

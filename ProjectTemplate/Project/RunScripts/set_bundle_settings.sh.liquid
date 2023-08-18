@@ -1,0 +1,9 @@
+BUILD_APP_DIR="$BUILT_PRODUCTS_DIR/$PRODUCT_NAME.app"
+SETTINGS_DIR="${PROJECT_DIR}/../Settings"
+
+if [[ $IS_SETTINGS_ALLOWED == "true" ]];
+then
+    cp -r "${SETTINGS_DIR}/Debug/Settings.bundle" "${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app"
+else
+    cp -r "${SETTINGS_DIR}/Production/Settings.bundle" "${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app"
+fi

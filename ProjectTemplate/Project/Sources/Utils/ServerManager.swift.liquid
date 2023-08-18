@@ -1,0 +1,152 @@
+//
+//  ServerManager.swift
+//  WetNose
+//
+//  Created by Nikolay Komissarov on 09.09.2022.
+//  Copyright © 2022 Sequenia. All rights reserved.
+//
+
+import Foundation
+import UIKit
+import SQExtensions
+
+class ServerManager {
+
+    static let instance = ServerManager()
+    
+    private lazy var observer = UserDefaultsObserver(delegate: self)
+    
+    private lazy var serversDict: [String: AnyObject] = {
+        guard let path = Bundle.main.path(forResource: String.serversFileName, ofType: "plist"),
+              let dict = NSDictionary(contentsOfFile: path) as? [String: AnyObject]
+        else { return [ : ] }
+            
+        return dict
+    }()
+    
+    private lazy var serverConfigs: [String: ServerConfiguration] = {
+        var configs = [String: ServerConfiguration]()
+        self.serversDict.forEach { key, value in
+            guard let value = value as? [String: Any],
+                  let baseUrlString = value[.baseUrlProperty] as? String,
+                  let baseUrl = URL(string: baseUrlString),
+                  let secretKey = value[.secretKeyProperty] as? String
+            else { return }
+
+            configs[key] = ServerConfiguration(baseUrl: baseUrl, secretKey: secretKey)
+        }
+        return configs
+    }()
+    
+// MARK: - init
+    private init() {
+        if Defaults.currentServer.isEmpty {
+            if !Configuration.instance.isChangingDomainAllowed {
+                Defaults.currentServer = .productionServer
+            } else {
+                Defaults.currentServer = UserDefaults.standard.predefinedServer
+            }
+        }
+        
+        self.observeSettingsUpdate()
+    }
+    
+    private func observeSettingsUpdate() {
+        self.observer.observeUserDefaultsUpdate(forKeyPath: .predefinedServer)
+        self.observer.observeUserDefaultsUpdate(forKeyPath: .customBaseUrl)
+    }
+    
+    private func clearConfings() {
+        DIHelper.instance.reload()
+    }
+    
+    private func updateInitialViewController() {
+
+        let window = UIWindow.sq.keyWindow
+        window?.rootViewController = DIHelper.instance.createStartView()
+        window?.makeKeyAndVisible()
+    }
+    
+// MARK: - deinit
+    deinit {
+        self.observer.removeObserverUserDefaults(forKeyPath: .predefinedServer)
+        self.observer.removeObserverUserDefaults(forKeyPath: .customBaseUrl)
+    }
+}
+
+extension ServerManager {
+
+    var baseURL: URL {
+        if let customServer = Defaults.customServer,
+           let baseURL = URL(string: customServer) {
+
+            return baseURL
+        }
+
+        // swiftlint:disable:next force_unwrapping
+        return self.serverConfigs[Defaults.currentServer]!.baseUrl
+    }
+
+    var secretKey: String {
+        // swiftlint:disable:next force_unwrapping
+        self.serverConfigs[Defaults.currentServer]!.secretKey
+    }
+}
+
+// MARK: - UserDefaultsObserverDelegate
+extension ServerManager: UserDefaultsObserverDelegate {
+    
+    func updateValue(_ value: Any?, forKeyPath: String?) {
+        if forKeyPath == .customBaseUrl,
+           let newServer = value as? String {
+
+            Defaults.customServer = newServer
+            self.clearConfings()
+            self.updateInitialViewController()
+
+            return
+        }
+
+        guard forKeyPath == .predefinedServer,
+              let newServer = value as? String else { return }
+
+        Defaults.customServer = nil
+        Defaults.currentServer = newServer
+        self.clearConfings()
+        self.updateInitialViewController()
+    }
+}
+
+// MARK: - Constants
+private extension String {
+
+    static let serversFileName = "Servers"
+    
+    static let predefinedServer = "PredefinedServer"
+    static let customBaseUrl = "customBaseUrl"
+
+    static let baseUrlProperty   = "BaseURL"
+    static let secretKeyProperty = "SecretKey"
+    static let isChangingDomainsAllowed = "IsChangingDomainsAllowed"
+}
+
+// MARK: - Server names
+private extension String {
+
+    static let stagingServer = "Staging"
+    static let productionServer = "Production"
+}
+
+private extension UserDefaults {
+    
+    @objc dynamic var predefinedServer: String {
+        return string(forKey: .predefinedServer) ?? .stagingServer
+    }
+}
+
+// MARK: - ServerConfiguration
+private struct ServerConfiguration {
+
+    let baseUrl: URL
+    let secretKey: String
+}

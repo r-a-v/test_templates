@@ -1,0 +1,55 @@
+//
+//  {{ module_info.name }}Section.swift
+//  {{ module_info.project_name }}
+//
+//  Created by {{ developer.name }} on {{ date }}.
+//  Copyright {{ year }} {{ developer.company }}. All rights reserved.
+//
+
+import Foundation
+import SQNetwork
+
+enum {{ module_info.name }}Request {
+
+    case some
+}
+
+extension {{ module_info.name }}Request: BaseHttpRequest {
+    
+    var path: String {
+        switch self {
+        case .some:
+            return "\(String.apiV1Path)/some"
+        }
+    }
+
+    var method: HttpRequestMethod {
+        switch self {
+        case .some:
+            return .get
+        }
+    }
+
+    var headers: [String: String] {
+        switch self {
+        case .some:
+            return [ : ]
+        }
+    }
+
+    var parameters: [String: Any] {
+        var parameters = [String: Any]()
+        switch self {
+        case .some:
+            break
+        }
+        return parameters
+    }
+
+    var body: [String: Any] {
+        switch self {
+        case .some:
+            return [ : ]
+        }
+    }
+}

@@ -18,24 +18,6 @@ final class {{ module_info.name }}LayoutManager {
 
     private weak var delegate: {{ module_info.name }}LayoutManagerDelegate!
 
-    private lazy var plain: NSCollectionLayoutGroup = {
-        let size = NSCollectionLayoutSize(
-            widthDimension: .fractionalWidth(1),
-            heightDimension: .estimated(44)
-        )
-        let item = NSCollectionLayoutItem(
-            layoutSize: size
-        )
-
-        let group = NSCollectionLayoutGroup.horizontal(
-            layoutSize: size,
-            subitem: item,
-            count: 1
-        )
-
-        return group
-    }()
-
     init(delegate: {{ module_info.name }}LayoutManagerDelegate) {
         self.delegate = delegate
     }
@@ -47,7 +29,7 @@ final class {{ module_info.name }}LayoutManager {
             sectionProvider: { index, _ in
                 let section = self.delegate.sectionType(forSection: index)
 
-                let sectionLayout = NSCollectionLayoutSection(group: self.layoutGroup(forSection: section))
+                let sectionLayout = self.layoutGroup(forSection: section)
                 if section?.header != nil {
                     let header = NSCollectionLayoutBoundarySupplementaryItem(
                         layoutSize: .init(
@@ -76,13 +58,13 @@ final class {{ module_info.name }}LayoutManager {
         )
     }
 
-    private func layoutGroup(forSection section: {{ module_info.name }}Section?) -> NSCollectionLayoutGroup {
+    private func layoutGroup(forSection section: {{ module_info.name }}Section?) -> NSCollectionLayoutSection {
         switch section?.type {
         case .section:
-            return self.plain
+            return .createPlainLayoutSection()
 
         case .none:
-            return self.plain
+            return .createPlainLayoutSection()
         }
     }
 }

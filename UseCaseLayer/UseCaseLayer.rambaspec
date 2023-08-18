@@ -1,0 +1,24 @@
+# Template information section
+name: "UseCaseLayer"
+summary: "Files for useCase layer (repository, network, dataSource, uaseCase)"
+author: "Sequenia"
+version: "1.0.0"
+
+# The declarations for code files
+
+code_files:
+# DataSource layer
+- {name: DataSource/DataSourcesDIPart.swift, path: DataSource/DataSourcesDIPart.swift.liquid}
+- {name: DataSource/RemoteDataSource.swift, path: DataSource/RemoteDataSource.swift.liquid}
+
+# Network layer
+- {name: Network/Client.swift, path: Network/Client.swift.liquid}
+- {name: Network/ClientsDIPart.swift, path: Network/ClientsDIPart.swift.liquid}
+- {name: Network/Request.swift, path: Network/Request.swift.liquid}
+
+# Repository layer
+- {name: Repository/RepositoriesDIPart.swift, path: Repository/RepositoriesDIPart.swift.liquid}
+- {name: Repository/Repository.swift, path: Repository/Repository.swift.liquid}
+
+# UseCase layer
+- {name: UseCase/UseCasesDIPart.swift, path: UseCase/UseCasesDIPart.swift.liquid}

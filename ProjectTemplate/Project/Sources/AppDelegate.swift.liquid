@@ -9,6 +9,7 @@
 import UIKit
 import SQExtensions
 import SQUIKit
+import BaseClasses
 import netfox
 
 // MARK: - AppDelegate
@@ -25,21 +26,53 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
     ) -> Bool {
         self.setThirdPartyLibs(options: launchOptions)
         self.setupSystemLogger()
+        self.setupQuickActions()
         self.setInitialViewController()
 
         return true
     }
+
+    func application(
+        _ application: UIApplication,
+        performActionFor shortcutItem: UIApplicationShortcutItem,
+        completionHandler: @escaping (Bool) -> Void
+    ) {
+        self.processShortcutItem(shortcutItem)
+        completionHandler(true)
+    }
     
 // MARK: - Third Party Libs
     private func setThirdPartyLibs(options: [UIApplication.LaunchOptionsKey: Any]?) {
-
     }
 
 // MARK: - Setup logger
     private func setupSystemLogger() {
-        if !Configurations.instance.isSystemLoggerAllowed { return }
+        if !Configuration.instance.isSystemLoggerAllowed { return }
 
         NFX.sharedInstance().start()
+    }
+
+// MARK: - Quick actions
+    private func setupQuickActions() {
+        var items = [UIApplicationShortcutItem]()
+        if Configuration.instance.isSettingsAllowed {
+            items.append(
+                .init(
+                    type: .shortCutItemSettings,
+                    localizedTitle: R.string.shortcutItems.settings(),
+                    localizedSubtitle: nil,
+                    icon: .init(templateImageName: "icSetting")
+                )
+            )
+        }
+        UIApplication.shared.shortcutItems = items
+    }
+
+    private func processShortcutItem(_ item: UIApplicationShortcutItem) {
+        if item.type == .shortCutItemSettings,
+           let url = URL(string: UIApplication.openSettingsURLString) {
+            UIApplication.shared.open(url)
+        }
     }
     
 // MARK: - Set Initial View Controller
@@ -50,4 +83,9 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
         self.window?.makeKey()
     }
 
+}
+
+private extension String {
+
+    static let shortCutItemSettings = "settings"
 }

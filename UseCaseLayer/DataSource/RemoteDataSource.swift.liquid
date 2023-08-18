@@ -1,0 +1,47 @@
+//
+//  {{ module_info.name }}Section.swift
+//  {{ module_info.project_name }}
+//
+//  Created by {{ developer.name }} on {{ date }}.
+//  Copyright {{ year }} {{ developer.company }}. All rights reserved.
+//
+
+import Foundation
+import Entities
+import SQNetwork
+import SwiftyJSON
+import SQAuthorization
+
+protocol {{ module_info.name }}RemoteDataSource: AnyObject {
+
+    init(
+        client: {{ module_info.name }}Client,
+        authenticationStorage: AuthenticationRuntimeStorage
+    )
+}
+
+class {{ module_info.name }}RemoteDataSourceImpl {
+
+    private var client: {{ module_info.name }}Client
+    private var httpClient: BaseHttpClient {
+        guard let httpClient = self.client as? BaseHttpClient else {
+            fatalError("You must use http client here")
+        }
+
+        return httpClient
+    }
+
+    private var authenticationStorage: AuthenticationRuntimeStorage
+
+    required init(
+        client: {{ module_info.name }}Client,
+        authenticationStorage: AuthenticationRuntimeStorage
+    ) {
+        self.client = client
+        self.authenticationStorage = authenticationStorage
+    }
+}
+
+extension {{ module_info.name }}RemoteDataSourceImpl: {{ module_info.name }}RemoteDataSource {
+
+}

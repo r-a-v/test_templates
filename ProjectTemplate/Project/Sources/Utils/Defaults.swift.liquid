@@ -1,21 +1,26 @@
 //
 //  Defaults.swift
-//  {{ module_info.name }}
+//  Classified
 //
-//  Created by {{ developer.name }} on {{ date }}.
-//  Copyright {{ year }} {{ developer.company }}. All rights reserved.
+//  Created by Semen Kologrivov on 25/08/2022.
+//  Copyright 2022 Sequenia. All rights reserved.
 //
 
 import Foundation
 import SQDefaults
+import Entities
 
 struct Defaults {
 
-    @StoredValue(key: .environment, defaultValue: Environment.test)
-    static var environment: Environment!
+    @StoredValue(key: .currentServer, defaultValue: "")
+    static var currentServer: String!
+
+    @StoredValue(key: .customServer, defaultValue: nil)
+    static var customServer: String?
 }
 
 private extension String {
 
-    static let environment = "environment"
+    static let customServer  = "customServer"
+    static let currentServer = "currentServer"
 }

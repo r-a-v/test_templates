@@ -120,13 +120,6 @@ custom_rules:
         message: 'Use R.image.name() or typealias of this instead'
         severity: error
 
-# MARK: - Naming
-    get_prefixed_function:
-        name: 'Get prefixed function'
-        regex: '(?-smxi)(func get[\w]+?(\())'
-        message: 'You should not prefix your functions with the word get.'
-        severity: warning
-
 # MARK: - Empty line rules
     empty_line_before_closing_brace:
         name: 'Empty Line before closing brace'

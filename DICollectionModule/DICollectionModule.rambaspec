@@ -23,3 +23,6 @@ code_files:
 
 # DIPart
 - {name: DIPart.swift, path: ../DIModule/DIPart.swift.liquid}
+
+# DIHelper
+- {name: DIHelper.swift, path: ../DIModule/DIHelper.swift.liquid}

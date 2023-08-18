@@ -15,17 +15,30 @@ final class DIHelper {
     internal let container = DIContainer()
 
     init() {
+        self.registers()
+    }
+
+    func registers() {
+        self.registerStorages()
+        self.registerClients()
+        self.registerDataSources()
+        self.registerRepositories()
         self.registerUseCases()
         self.registerManagers()
         self.registerModules()
 
         #if DEBUG
-        DISetting.Log.level = .verbose
+        DISetting.Log.level = .error
         if !self.container.makeGraph().checkIsValid(checkGraphCycles: true) {
             fatalError("Something went wrong with DI")
         }
         #endif
 
         self.container.initializeSingletonObjects()
+    }
+
+    func reload() {
+        self.container.clean()
+        self.registers()
     }
 }

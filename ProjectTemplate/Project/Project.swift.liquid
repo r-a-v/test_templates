@@ -3,7 +3,7 @@ import TuistUtils
 import Foundation
 
 let appVersion = "1.0.0"
-let region = "ru"
+let region = "{{ custom_parameters.lang_code }}"
 
 let baseSettings = SettingsDictionary()
     .debugInformationFormat(.dwarfWithDsymDebugInformationFormat)
@@ -12,7 +12,7 @@ let baseSettings = SettingsDictionary()
     .versionNumber(appVersion)
     .buildNumber(1)
     .appleGenericVersioningSystem()
-    .developmentLanguage("{{ custom_parameters.lang_code }}")
+    .developmentLanguage(region)
     .appIconName("$(APP_ICON_NAME)")
     .otherLinkerFlags(["-ObjC"])
 
@@ -56,6 +56,7 @@ let arguments = Arguments(
     launchArguments: launchArgs
 )
 
+
 let project = Project(
     name: "{{ module_info.name }}",
     organizationName: "{{ custom_parameters.company_name  }}",
@@ -89,10 +90,16 @@ let project = Project(
           sources: [
             "./Sources/**"
           ],
+          serversPlist: "./Configs/Servers.plist",
+          sources: [
+            "./Sources/**"
+          ],
           resources: [
             "./Resources/**",
             "./Sources/**/*.storyboard",
-            "./Sources/**/*.xib"
+            "./Sources/**/*.xib",
+            // Uncomment this if you want to use secrets
+            // "./Secrets/Configuration.plist"
           ],
           headers: .headers(),
           entitlements: "./Configs/Project.entitlements",
@@ -110,6 +117,11 @@ let project = Project(
                   "$SRCROOT/Sources/R.generated.swift"
                ],
                basedOnDependencyAnalysis: false
+            ),
+            .post(
+                path:"./RunScripts/set_bundle_settings.sh",
+                name: "Set Bundle Settings",
+                basedOnDependencyAnalysis: false
             ),
             // Uncomment lines if you will use Firebase Crashlytics
             // .post(
@@ -132,22 +144,26 @@ let project = Project(
             ),
           ],
           dependencies: [
+            // MARK: - Modules
+            .external(name: "SQAuthorization"),
+            .external(name: "UIComponents"),
+            .external(name: "BaseClasses"),
+            // MARK: - Libraries
             .external(name: "SQExtensions"),
             .external(name: "SQKeyboard"),
             .external(name: "SQCompositionLists"),
-            .external(name: "SQVUPER"),
             .external(name: "Kingfisher"),
             .external(name: "SQOperations"),
             .external(name: "SQUIKit"),
             .external(name: "SQDefaults"),
+            .external(name: "SQEntities"),
             .external(name: "SnapKit"),
-            .external(name: "AsyncMoya"),
             .external(name: "netfox"),
             .external(name: "Rswift"),
-            .external(name: "DITranquillity")
+            .external(name: "DITranquillity"),
             // Uncomment lines if you will use Firebase Crashlytics
-            // .external(product: "FirebaseCrashlytics"),
-            // .external(product: "FirebaseAnalyticsWithoutAdIdSupport")
+            // .external(name: "FirebaseCrashlytics"),
+            // .external(name: "FirebaseAnalyticsWithoutAdIdSupport")
           ]
       )
    ],
@@ -176,8 +192,10 @@ let project = Project(
    additionalFiles: [
         .folderReference(path: "../fastlane"),
         .folderReference(path: "./RunScripts"),
+        .folderReference(path: "../Settings"),
+        .folderReference(path: "../Templates"),
         // Uncomment lines if you will use some Firebase services
-        // .folderReference(path: "./Configs/FirebaseConfigs")
+        // .folderReference(path: "./Secrets/FirebaseConfigs")
         .glob(pattern: "../.gitlab-ci.yml"),
         .glob(pattern: "../.swiftlint.yml"),
         .glob(pattern: "../.tuist-version"),
@@ -185,6 +203,7 @@ let project = Project(
         .glob(pattern: "../Gemfile"),
         .glob(pattern: "../Rambafile"),
         .glob(pattern: "../README.md"),
-        .glob(pattern: "../up.json")
+        .glob(pattern: "../up.json"),
+        .glob(pattern: "../Mintfile")
    ]
 )

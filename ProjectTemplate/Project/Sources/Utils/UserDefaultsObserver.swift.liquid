@@ -1,0 +1,54 @@
+//
+//  UserDefaultsObserver.swift
+//  WetNose
+//
+//  Created by Nikolay Komissarov on 12.09.2022.
+//  Copyright © 2022 Sequenia. All rights reserved.
+//
+
+import Foundation
+
+// MARK: - UserDefaultsObserverDelegate
+protocol UserDefaultsObserverDelegate: AnyObject {
+    
+    func updateValue(_ value: Any?, forKeyPath: String?)
+}
+
+// MARK: - UserDefaultsObserver
+class UserDefaultsObserver: NSObject {
+    
+    private weak var delegate: UserDefaultsObserverDelegate?
+    
+    init(delegate: UserDefaultsObserverDelegate) {
+        self.delegate = delegate
+    }
+    
+    func observeUserDefaultsUpdate(forKeyPath: String) {
+        UserDefaults.standard.addObserver(
+            self,
+            forKeyPath: forKeyPath,
+            options: .new,
+            context: nil
+        )
+    }
+    
+    func removeObserverUserDefaults(forKeyPath: String) {
+        UserDefaults.standard.removeObserver(
+            self,
+            forKeyPath: forKeyPath,
+            context: nil
+        )
+    }
+    
+    override func observeValue(
+        forKeyPath keyPath: String?,
+        of object: Any?,
+        change: [NSKeyValueChangeKey: Any]?,
+        context: UnsafeMutableRawPointer?
+    ) {
+        self.delegate?.updateValue(
+            change?[.newKey],
+            forKeyPath: keyPath
+        )
+    }
+}

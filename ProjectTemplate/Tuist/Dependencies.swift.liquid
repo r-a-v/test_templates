@@ -4,30 +4,36 @@ import TuistUtils
 let dependencies = Dependencies(
     swiftPackageManager: .init(
         [
-//            .local(path: "../SQDevKit"),
+// MARK: - Modules
             .remote(
-                url: "https://github.com/sequenia/SQDevKit.git",
-                requirement: .exact("2.0.12")
+                url: "git@gitlab.sequenia.com:ios-development/modules/BaseClasses.git",
+                requirement: .branch("master")
             ),
             .remote(
-                url: "https://github.com/SnapKit/SnapKit.git",
-                requirement: .upToNextMajor(from: "5.0.1")
+                url: "git@gitlab.sequenia.com:ios-development/modules/SQAuthorization.git",
+                requirement: .branch("master")
+            ),
+            .remote(
+                url: "git@gitlab.sequenia.com:ios-development/modules/uicomponents.git",
+                requirement: .branch("master")
+            ),
+// MARK: - Libraries
+            .remote(
+                url: "https://github.com/sequenia/SQDevKit.git",
+                requirement: .exact("2.1.3")
             ),
             .remote(
                 url: "https://github.com/onevcat/Kingfisher.git",
                 requirement: .upToNextMajor(from: "7.2.2")
             ),
+            // Uncomment this, if you want to use firebase
             // .remote(
             //     url: "https://github.com/firebase/firebase-ios-sdk.git",
-            //     requirement: .upToNextMajor(from: "8.10.0")
+            //     requirement: .upToNextMajor(from: "9.5.0")
             // ),
             .remote(
                 url: "https://github.com/mac-cain13/R.swift.Library",
                 requirement: .upToNextMajor(from: "5.4.0")
-            ),
-            .remote(
-                url: "https://github.com/Moya/Moya.git",
-                requirement: .branch("development")
             ),
             .remote(
                 url: "https://github.com/kasketis/netfox.git",

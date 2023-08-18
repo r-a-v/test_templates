@@ -1,0 +1,62 @@
+//
+//  Configuration.swift
+//  {{ module_info.name }}
+//
+//  Created by {{ developer.name }} on {{ date }}.
+//  Copyright {{ year }} {{ developer.company }}. All rights reserved.
+//
+
+// swiftlint:disable all
+import Foundation
+import UIKit
+import SQExtensions
+
+class Configuration {
+
+    static let instance = Configuration()
+
+    private lazy var configDict: [String: AnyObject] = {
+        guard let path = Bundle.main.path(forResource: String.configFileName, ofType: "plist"),
+              let dict = NSDictionary(contentsOfFile: path) as? [String: AnyObject]
+        else { return [ : ] }
+            
+        return dict
+    }()
+}
+
+extension Configuration {
+    
+    var configurationName: String {
+        (Bundle.main.object(forInfoDictionaryKey: .configFileName) as? String) ?? .releaseConfiguration
+    }
+
+    var isSystemLoggerAllowed: Bool {
+        Bundle.sq.boolPropertyForKey(.isSystemLoggerAllowed) ?? false
+    }
+    
+    var isChangingDomainAllowed: Bool {
+        Bundle.sq.boolPropertyForKey(.isChangingDomainsAllowed) ?? false
+    }
+
+    var isSettingsAllowed: Bool {
+        Bundle.sq.boolPropertyForKey(.isSettingsAllowed) ?? false
+    }
+}
+
+// MARK: - Constants
+private extension String {
+
+    static let configFileName = "Configuration"
+
+    static let isSystemLoggerAllowed = "IsSystemLoggerAllowed"
+    
+    static let isChangingDomainsAllowed = "IsChangingDomainsAllowed"
+
+    static let isSettingsAllowed = "IsSettingsAllowed"
+}
+
+// MARK: - Configuration names
+private extension String {
+    
+    static let releaseConfiguration = "Release"
+}

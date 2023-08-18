@@ -1,0 +1,28 @@
+//
+//  {{ module_info.name }}Factory.swift
+//  {{ module_info.project_name }}
+//
+//  Created by {{ developer.name }} on {{ date }}.
+//  Copyright {{ year }} {{ developer.company }}. All rights reserved.
+//
+
+import Foundation
+import DITranquillity
+import SQAuthorization
+
+final class {{ module_info.name }}RepositoriesDIPart: DIPart {
+
+    static func load(container: DIContainer) {
+        container.register({{ module_info.name }}RepositoryImpl.init)
+            .as({{ module_info.name }}Repository.self)
+            .lifetime(.single)
+    }
+}
+
+extension DIRepositories {
+
+    @objc
+    func loadRepository{{ module_info.name }}DIPart() {
+        self.parts.append({{ module_info.name }}RepositoriesDIPart.self)
+    }
+}
