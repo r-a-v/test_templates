@@ -8,11 +8,11 @@ version: "1.0.0"
 
 code_files:
 # View layer
-- {name: Controller/ViewController.swift, path: Controller/ViewController.swift.liquid}
-- {name: Controller/ViewController+Delegates.swift, path: Controller/ViewController+Delegates.swift.liquid}
-- {name: Controller/ViewController+Sections.swift, path: Controller/ViewController+Sections.swift.liquid}
-- {name: Layout/Factory.swift, path: Layout/Factory.swift.liquid}
-- {name: Layout/Section.swift, path: Layout/Section.swift.liquid}
+- {name: Controller/ViewController.swift, path: View/Controller/ViewController.swift.liquid}
+- {name: Controller/ViewController+Delegates.swift, path: View/Controller/ViewController+Delegates.swift.liquid}
+- {name: Controller/ViewController+Sections.swift, path: View/Controller/ViewController+Sections.swift.liquid}
+- {name: Layout/Factory.swift, path: View/Layout/Factory.swift.liquid}
+- {name: Layout/Section.swift, path: View/Layout/Section.swift.liquid}
 - {name: Layout/LayoutManager.swift, path: View/Layout/LayoutManager.swift.liquid}
 - {name: Layout/Cells}
 
