@@ -10,7 +10,7 @@ import DITranquillity
 
 extension DIHelper {
 
-    func {{ module_info.name | lowcase }}View() -> {{ module_info.name }}View {
+    func {{ module_info.name | downcase }}View() -> {{ module_info.name }}View {
 
         return self.container.resolve(
             arguments: AnyArguments(
