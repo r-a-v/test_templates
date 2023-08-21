@@ -11,25 +11,17 @@ import SQExtensions
 import SQCompositionLists
 import SQUIKit
 
-protocol {{ module_info.name }}LayoutManagerDelegate: BlockLayoutManagerDelegate {
+protocol {{ module_info.name }}LayoutManagerDelegate: AnyObject {
 
     func sectionType(forSection section: Int) -> {{ module_info.name }}Section?
 }
 
-final class {{ module_info.name }}LayoutManager: BlockLayoutManager {
+final class {{ module_info.name }}LayoutManager {
 
     private weak var delegate: {{ module_info.name }}LayoutManagerDelegate!
-    private weak var collectionView: UICollectionView?
 
-    init(
-        delegate: {{ module_info.name }}LayoutManagerDelegate,
-        collectionView: UICollectionView?
-    ) {
-        super.init()
-
+    init(delegate: {{ module_info.name }}LayoutManagerDelegate) {
         self.delegate = delegate
-        self.blockLayoutManagerDelegate = delegate
-        self.collectionView = collectionView
     }
 
     func createLayout(
@@ -40,17 +32,6 @@ final class {{ module_info.name }}LayoutManager: BlockLayoutManager {
         let collectionViewLayout = CustomizableLayout(
             sectionProvider: { index, _ in
                 let section = self.delegate.sectionType(forSection: index)
-
-                switch section?.type {
-                    case .share:
-                        return self.createBlockLayout(
-                            section: section,
-                            collectionView: self.collectionView
-                        )
-    
-                    default: break
-                }
-
                 let sectionLayout = self.layoutGroup(forSection: section)
 
                 let backgroundDecoration = NSCollectionLayoutDecorationItem.background(
