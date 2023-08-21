@@ -24,7 +24,7 @@ protocol {{ module_info.name }}View: BaseView {
 final class {{ module_info.name }}ViewController: BaseListViewController {
 
 // MARK: - VUPER
-    var presenter: {{ module_info.name }}Presenter!
+    var presenter: {{ module_info.name }}Presenter?
 
 // MARK: - Layout
     private lazy var layoutManager = {{ module_info.name }}LayoutManager(delegate: self)
@@ -40,7 +40,7 @@ final class {{ module_info.name }}ViewController: BaseListViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        self.presenter.viewDidLoad()
+        self.presenter?.viewDidLoad()
     }
 
 // MARK: - Configure collection
