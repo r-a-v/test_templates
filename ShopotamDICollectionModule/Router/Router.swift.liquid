@@ -1,0 +1,31 @@
+//
+//  {{ module_info.name }}Router.swift
+//  {{ module_info.project_name }}
+//
+//  Created by {{ developer.name }} on {{ date }}.
+//  Copyright {{ year }} {{ developer.company }}. All rights reserved.
+//
+
+import UIKit
+
+// MARK: - {{ module_info.name }}Router
+protocol {{ module_info.name }}Router: BaseRouter {
+
+}
+
+// MARK: - {{ module_info.name }}RouterImpl
+final class {{ module_info.name }}RouterImpl: BaseRouterImpl {
+
+// MARK: - VUPER
+    weak var view: {{ module_info.name }}View?
+
+// MARK: - Init
+    required init(view: {{ module_info.name }}View) {
+        self.view = view
+    }
+}
+
+// MARK: - {{ module_info.name }}Router
+extension {{ module_info.name }}RouterImpl: {{ module_info.name }}Router {
+
+}

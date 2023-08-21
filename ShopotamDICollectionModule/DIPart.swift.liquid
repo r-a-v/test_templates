@@ -1,0 +1,42 @@
+//
+//  {{ module_info.name }}DIPart.swift
+//  {{ module_info.project_name }}
+//
+//  Created by {{ developer.name }} on {{ date }}.
+//  Copyright {{ year }} {{ developer.company }}. All rights reserved.
+//
+
+import Foundation
+import DITranquillity
+
+final class {{ module_info.name }}DIPart: DIPart {
+
+    static func load(container: DIContainer) {
+        container.register({{ module_info.name }}UseCasesImpl.init)
+            .as({{ module_info.name }}UseCases.self)
+            .lifetime(.prototype)
+
+        container.register({{ module_info.name }}RouterImpl.init)
+            .as({{ module_info.name }}Router.self)
+
+        container.register({{ module_info.name }}PresenterImpl.init)
+        .injection(cycle: false, \.view)
+        .injection(cycle: true, \.router)
+        .injection(cycle: true, \.useCases)
+        .as({{ module_info.name }}Presenter.self)
+        .lifetime(.objectGraph)
+
+        container.register { {{ module_info.name }}ViewController() }
+            .injection(cycle: true, \.presenter)
+            .as({{ module_info.name }}View.self)
+            .lifetime(.objectGraph)
+    }
+}
+
+extension DIModules {
+    
+    @objc
+    func loadModule{{ module_info.name }}DIPart() {
+        self.parts.append({{ module_info.name }}DIPart.self)
+    }
+}

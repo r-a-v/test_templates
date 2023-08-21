@@ -1,0 +1,38 @@
+//
+//  {{ module_info.name }}Presenter.swift
+//  {{ module_info.project_name }}
+//
+//  Created by {{ developer.name }} on {{ date }}.
+//  Copyright {{ year }} {{ developer.company }}. All rights reserved.
+//
+
+import Foundation
+import SQExtensions
+
+// MARK: - {{ module_info.name }}Presenter
+protocol {{ module_info.name }}Presenter: BasePresenter {
+
+}
+
+// MARK: - {{ module_info.name }}PresenterImpl
+final class {{ module_info.name }}PresenterImpl: BasePresenterImpl {
+
+// MARK: - VUPER
+    weak var view: {{ module_info.name }}View? 
+    var router: {{ module_info.name }}Router?
+    var useCases: {{ module_info.name }}UseCases?
+
+// MARK: - Data
+    private var data = {{ module_info.name }}Data()
+
+// MARK: - Life cycle
+    override func viewDidLoad() {
+        super.viewDidLoad()
+
+    }
+}
+
+// MARK: - {{ module_info.name }}Presenter
+extension {{ module_info.name }}PresenterImpl: {{ module_info.name }}Presenter {
+
+}

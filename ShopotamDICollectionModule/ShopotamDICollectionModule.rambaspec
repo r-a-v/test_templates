@@ -17,15 +17,15 @@ code_files:
 - {name: View/Layout/LayoutManager.swift, path: View/Layout/LayoutManager.swift.liquid}
 
 # Presenter layer
-- {name: Presenter/Presenter.swift, path: ../DIModule/Presenter/Presenter.swift.liquid}
-- {name: Presenter/Data.swift, path: ../DIModule/Presenter/Data.swift.liquid}
-- {name: Presenter/UseCases.swift, path: ../DIModule/Presenter/UseCases.swift.liquid}
+- {name: Presenter/Presenter.swift, path: Presenter/Presenter.swift.liquid}
+- {name: Presenter/Data.swift, path: Presenter/Data.swift.liquid}
+- {name: Presenter/UseCases.swift, path: Presenter/UseCases.swift.liquid}
 
 # Router layer
-- {name: Router/Router.swift, path: ../DIModule/Router/Router.swift.liquid}
+- {name: Router/Router.swift, path: Router/Router.swift.liquid}
 
 # DIPart
-- {name: DIPart.swift, path: ../DIModule/DIPart.swift.liquid}
+- {name: DIPart.swift, path: DIPart.swift.liquid}
 
 # DIHelper
-- {name: DIHelper.swift, path: ../DIModule/DIHelper.swift.liquid}
+- {name: DIHelper.swift, path: DIHelper.swift.liquid}
